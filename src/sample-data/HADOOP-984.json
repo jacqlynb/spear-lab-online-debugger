@@ -1,0 +1,159 @@
+{
+  "exception": [
+    [
+      {
+        "lineNumber": 279,
+        "column": 0,
+        "methodName": "read",
+        "className": "Buffer",
+        "content": "// optimized version of read()\npublic int read() throws IOException {\n    if (pos >= count)\n        return super.read();\n    return buf[pos++] & 0xff;\n}"
+      },
+      {
+        "lineNumber": 279,
+        "column": 0,
+        "methodName": "read",
+        "className": "Buffer",
+        "content": "// optimized version of read()\npublic int read() throws IOException {\n    if (pos >= count)\n        return super.read();\n    return buf[pos++] & 0xff;\n}"
+      },
+      {
+        "lineNumber": 285,
+        "column": 0,
+        "methodName": "read",
+        "className": "Buffer",
+        "content": "public int read(long position, byte[] buffer, int offset, int length) throws IOException {\n    return ((PositionCache) in).read(position, buffer, offset, length);\n}"
+      },
+      {
+        "lineNumber": 287,
+        "column": 0,
+        "methodName": "read",
+        "className": "FSDataInputStream.PositionCache"
+      },
+      {
+        "lineNumber": 281,
+        "column": 0,
+        "methodName": "read",
+        "className": "BufferedInputStream"
+      }
+    ],
+    [
+      {
+        "lineNumber": 216,
+        "column": 0,
+        "methodName": "read",
+        "className": "PositionCache",
+        "content": "// This is the only read() method called by BufferedInputStream, so we trap\n// calls to it in order to cache the position.\npublic int read(byte[] b, int off, int len) throws IOException {\n    int result;\n    if ((result = in.read(b, off, len)) > 0)\n        position += result;\n    return result;\n}"
+      },
+      {
+        "lineNumber": 216,
+        "column": 0,
+        "methodName": "read",
+        "className": "PositionCache",
+        "content": "// This is the only read() method called by BufferedInputStream, so we trap\n// calls to it in order to cache the position.\npublic int read(byte[] b, int off, int len) throws IOException {\n    int result;\n    if ((result = in.read(b, off, len)) > 0)\n        position += result;\n    return result;\n}"
+      },
+      {
+        "lineNumber": 232,
+        "column": 0,
+        "methodName": "read",
+        "className": "PositionCache",
+        "content": "public int read(long position, byte[] buffer, int offset, int length) throws IOException {\n    return ((PositionedReadable) in).read(position, buffer, offset, length);\n}"
+      },
+      {
+        "lineNumber": 30,
+        "column": 0,
+        "methodName": "read",
+        "className": "PositionedReadable",
+        "content": "/**\n * Read upto the specified number of bytes, from a given\n * position within a file, and return the number of bytes read. This does not\n * change the current offset of a file, and is thread-safe.\n */\npublic int read(long position, byte[] buffer, int offset, int length) throws IOException;"
+      },
+      {
+        "lineNumber": 218,
+        "column": 0,
+        "methodName": "read",
+        "className": "InputStream"
+      }
+    ],
+    [
+      {
+        "lineNumber": 92,
+        "column": 0,
+        "methodName": "read",
+        "className": "Checker",
+        "content": "public int read(byte[] b, int off, int len) throws IOException {\n    int read;\n    boolean retry;\n    int retriesLeft = 3;\n    long oldPos = getPos();\n    do {\n        retriesLeft--;\n        retry = false;\n        read = in.read(b, off, len);\n        if (sums != null) {\n            long oldSumsPos = sums.getPos();\n            try {\n                int summed = 0;\n                while (summed < read) {\n                    int goal = bytesPerSum - inSum;\n                    int inBuf = read - summed;\n                    int toSum = inBuf <= goal ? inBuf : goal;\n                    try {\n                        sum.update(b, off + summed, toSum);\n                    } catch (ArrayIndexOutOfBoundsException e) {\n                        throw new RuntimeException(\"Summer buffer overflow b.len=\" + b.length + \", off=\" + off + \", summed=\" + summed + \", read=\" + read + \", bytesPerSum=\" + bytesPerSum + \", inSum=\" + inSum, e);\n                    }\n                    summed += toSum;\n                    inSum += toSum;\n                    if (inSum == bytesPerSum) {\n                        verifySum(read - (summed - bytesPerSum));\n                    }\n                }\n            } catch (ChecksumException ce) {\n                LOG.info(\"Found checksum error: \" + StringUtils.stringifyException(ce));\n                if (retriesLeft == 0) {\n                    throw ce;\n                }\n                sums.seek(oldSumsPos);\n                if (!((FSInputStream) in).seekToNewSource(oldPos) || !((FSInputStream) sumsIn).seekToNewSource(oldSumsPos)) {\n                    // try to do the read again.  We throw an exception instead.\n                    throw ce;\n                } else {\n                    // Since at least one of the sources is different, the read might succeed,\n                    // so we'll retry.\n                    retry = true;\n                }\n            }\n        }\n    } while (retry);\n    return read;\n}"
+      },
+      {
+        "lineNumber": 92,
+        "column": 0,
+        "methodName": "read",
+        "className": "Checker",
+        "content": "public int read(byte[] b, int off, int len) throws IOException {\n    int read;\n    boolean retry;\n    int retriesLeft = 3;\n    long oldPos = getPos();\n    do {\n        retriesLeft--;\n        retry = false;\n        read = in.read(b, off, len);\n        if (sums != null) {\n            long oldSumsPos = sums.getPos();\n            try {\n                int summed = 0;\n                while (summed < read) {\n                    int goal = bytesPerSum - inSum;\n                    int inBuf = read - summed;\n                    int toSum = inBuf <= goal ? inBuf : goal;\n                    try {\n                        sum.update(b, off + summed, toSum);\n                    } catch (ArrayIndexOutOfBoundsException e) {\n                        throw new RuntimeException(\"Summer buffer overflow b.len=\" + b.length + \", off=\" + off + \", summed=\" + summed + \", read=\" + read + \", bytesPerSum=\" + bytesPerSum + \", inSum=\" + inSum, e);\n                    }\n                    summed += toSum;\n                    inSum += toSum;\n                    if (inSum == bytesPerSum) {\n                        verifySum(read - (summed - bytesPerSum));\n                    }\n                }\n            } catch (ChecksumException ce) {\n                LOG.info(\"Found checksum error: \" + StringUtils.stringifyException(ce));\n                if (retriesLeft == 0) {\n                    throw ce;\n                }\n                sums.seek(oldSumsPos);\n                if (!((FSInputStream) in).seekToNewSource(oldPos) || !((FSInputStream) sumsIn).seekToNewSource(oldSumsPos)) {\n                    // try to do the read again.  We throw an exception instead.\n                    throw ce;\n                } else {\n                    // Since at least one of the sources is different, the read might succeed,\n                    // so we'll retry.\n                    retry = true;\n                }\n            }\n        }\n    } while (retry);\n    return read;\n}"
+      },
+      {
+        "lineNumber": 175,
+        "column": 0,
+        "methodName": "read",
+        "className": "Checker",
+        "content": "public int read(long position, byte[] buffer, int offset, int length) throws IOException {\n    return ((FSInputStream) in).read(position, buffer, offset, length);\n}"
+      },
+      {
+        "lineNumber": 177,
+        "column": 0,
+        "methodName": "read",
+        "className": "FSInputStream"
+      },
+      {
+        "lineNumber": 96,
+        "column": 0,
+        "methodName": "getPos",
+        "className": "FSDataInputStream.Checker"
+      },
+      {
+        "lineNumber": 101,
+        "column": 0,
+        "methodName": "read",
+        "className": "InputStream"
+      },
+      {
+        "lineNumber": 104,
+        "column": 0,
+        "methodName": "getPos",
+        "className": "FSDataInputStream"
+      },
+      {
+        "lineNumber": 129,
+        "column": 0,
+        "methodName": "info"
+      },
+      {
+        "lineNumber": 129,
+        "column": 0,
+        "methodName": "stringifyException",
+        "className": "ChecksumException"
+      },
+      {
+        "lineNumber": 133,
+        "column": 0,
+        "methodName": "seek",
+        "className": "FSDataInputStream"
+      },
+      {
+        "lineNumber": 46,
+        "column": 0,
+        "methodName": "seekToNewSource",
+        "className": "FSInputStream",
+        "content": "/**\n * Seeks a different copy of the data.  Returns true if\n * found a new source, false otherwise.\n */\npublic abstract boolean seekToNewSource(long targetPos) throws IOException;"
+      },
+      {
+        "lineNumber": 113,
+        "column": 0,
+        "methodName": "update",
+        "className": "Checksum"
+      },
+      {
+        "lineNumber": 125,
+        "column": 0,
+        "methodName": "verifySum",
+        "className": "FSDataInputStream.Checker"
+      }
+    ]
+  ],
+  "log": []
+}
