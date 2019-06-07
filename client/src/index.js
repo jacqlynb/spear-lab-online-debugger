@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import CallPath from './CallPath';
 import './index.css';
+
 
 class App extends React.Component {
   state = {
@@ -11,32 +13,35 @@ class App extends React.Component {
   componentDidMount() {
     this.fetchData()
       .then(data => {
-        console.log("first data loggin", data.exception)
         this.setState({
           exceptionData: data.exception,
           log: data.log
         });
-        console.log("after setting state: ", this.state.exceptionData[0][1].lineNumber)
-        console.log("after setting state", this.state.exceptionData[0][0].lineNumber)
       }).catch((err) => console.log(err));
   }
   
   render() {
-    let exceptions;
-    console.log(this.state.exceptionData)
+    let callPathElements;
+    let logs;
     if (this.state.exceptionData) {
-      exceptions = 
-      <p>{this.state.exceptionData[0][2].lineNumber}</p>
+      callPathElements = this.state.exceptionData.map((callPathElement, index) => {
+        return (
+          <CallPath 
+          callPathElement={this.state.exceptionData[index]}/>
+        )
+      });
     } 
     else {
-      exceptions = null;
+      callPathElements = null;
     }
+
+    
     return (
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
           <div className="log-report">
-            {exceptions}
+            {callPathElements}
           </div>
           <div className="other">
           </div>
