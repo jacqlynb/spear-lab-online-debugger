@@ -7,6 +7,39 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.header {
+  background: rgb(172, 188, 204);
+  color: white;
+  font-size: 2em;
+  text-align: center;
+  padding: 15px
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  
+  /* flex-flow: column; */
+  /* align-items: stretch; */
+}
+
+.log-report {
+  height: 100%;
+  overflow: auto;
+  flex: 1;
+  background: rgb(245, 245, 245);
+  border-right: 1px solid #eee;
+  box-shadow: 0 2px 3px rgb(161, 161, 161);
+}
+
+.other {
+  flex: 1;
+}
+
+
+
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
