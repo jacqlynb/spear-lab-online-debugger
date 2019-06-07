@@ -14,10 +14,18 @@ const exceptionSchema = new Schema({
   log: []
 });
 
+const sourceCodeSchema = new Schema({
+  lineNumber: Number,
+  codeLine: String,
+  documentTitle: String
+})
+
 const Exception = mongoose.model('Exception', exceptionSchema);
 const Log = mongoose.model('Log', logSchema);
+const SourceCode = mongoose.model('SourceCode', sourceCodeSchema);
 
 module.exports = {
   Exception, 
-  Log
+  Log,
+  SourceCode
 }
