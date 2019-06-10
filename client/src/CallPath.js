@@ -5,7 +5,7 @@ import LoggingPoint from './LoggingPoint';
 const callpath = (props) => {
   return (
     <div className="CallPath">
-    <p className="callpath-header"></p>
+    <p className="callpath-header">Call path: </p>
       <LoggingPoint
       exceptionElement = {props.callPathElement}/>
     </div>

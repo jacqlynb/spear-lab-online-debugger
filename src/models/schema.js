@@ -20,12 +20,21 @@ const sourceCodeSchema = new Schema({
   documentTitle: String
 })
 
+
+const codelineSchema = new Schema({
+  code: String
+})
+
+
+
 const Exception = mongoose.model('Exception', exceptionSchema);
 const Log = mongoose.model('Log', logSchema);
 const SourceCode = mongoose.model('SourceCode', sourceCodeSchema);
+const Codeline = new mongoose.model('Codeline', codelineSchema);
 
 module.exports = {
   Exception, 
   Log,
-  SourceCode
+  SourceCode, 
+  Codeline
 }

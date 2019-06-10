@@ -1,28 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+//import Highlighter from 'react-highlight-words';
 import CallPath from './CallPath';
+import CodeLine from './CodeLine';
 import './index.css';
-
 
 class App extends React.Component {
   state = {
     exceptionData: null,
-    log: []
+    log: [], 
+    sourceCode: null, 
+    lineNumbers: null,
   }
 
   componentDidMount() {
     this.fetchData()
       .then(data => {
+        let relevantLineNumbers = data[0][0].exception.map(exceptionElements => {
+          return exceptionElements.map((callPath) => {
+           return callPath.lineNumber;
+          })
+        })
+
+        let relevantLineNumbersJoined = [];
+        relevantLineNumbers.map(lineNumberArray => {
+          return lineNumberArray.map(lineNumber => {
+            relevantLineNumbersJoined.push(lineNumber);
+            return lineNumber;
+          })
+        })
+
+        console.log(relevantLineNumbersJoined)
+
         this.setState({
-          exceptionData: data.exception,
-          log: data.log
+          exceptionData: data[0][0].exception,
+          log: data[0][0].log,
+          sourceCode: data[1],
+          lineNumbers: relevantLineNumbersJoined
         });
       }).catch((err) => console.log(err));
   }
   
   render() {
+
     let callPathElements;
-    let logs;
     if (this.state.exceptionData) {
       callPathElements = this.state.exceptionData.map((callPathElement, index) => {
         return (
@@ -35,15 +56,34 @@ class App extends React.Component {
       callPathElements = null;
     }
 
-    
+    let codelines;
+    if (this.state.sourceCode) {
+      codelines = this.state.sourceCode.map((codeline, index) => {
+        return (
+          <CodeLine 
+            line={this.state.sourceCode[index].lineNumber}
+            code={this.state.sourceCode[index].codeLine} 
+            linesToHighlight={this.state.lineNumbers}
+          />
+        )
+      });
+    }
+    else {
+      codelines = null;
+    }
+
+
     return (
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
-          <div className="log-report">
+          <div className="callPath">
+            <p className="exception-header">Exception: </p>
             {callPathElements}
+            <p className="exception-header">Log: {this.state.log}</p>
           </div>
-          <div className="other">
+          <div className="sourceCode"> 
+            {codelines}
           </div>
         </div>
       </div>

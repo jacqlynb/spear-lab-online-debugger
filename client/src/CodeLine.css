@@ -1,0 +1,23 @@
+.sourceCode {
+  /* margin-top: 50px; */
+  padding-left: 50px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: pre;
+}
+
+.CodeLine {
+  color: lightslategray;
+  line-height: 10px;
+  white-space: pre;
+}
+
+.lineFormatting {
+  padding-right: 50px;
+  white-space: pre;
+}
+
+.highlight {
+  background: yellow;
+}
