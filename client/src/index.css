@@ -31,18 +31,22 @@ body {
   flex-direction: row;
 }
 
+.fileTree {
+  flex: 2;
+}
+
 .callPath {
   height: 100%;
   padding-top: 70px;
   overflow: auto;
-  flex: 2;
+  flex: 5;
   background: white;
   border-right: 1px solid #eee;
   box-shadow: 0 2px 3px rgb(161, 161, 161);
 }
 
 .sourceCode {
-  flex: 3;
+  flex: 6;
   margin-top: 80px;
 }
 

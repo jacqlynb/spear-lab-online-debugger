@@ -72,11 +72,12 @@ class App extends React.Component {
       codelines = null;
     }
 
-
     return (
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
+          <div className="fileTree">
+          </div>
           <div className="callPath">
             <p className="exception-header">Exception: </p>
             {callPathElements}

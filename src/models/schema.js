@@ -9,32 +9,26 @@ const logSchema = new Schema({
   content: String 
 });
 
-const exceptionSchema = new Schema({
-  exception: [[logSchema]],
-  log: []
-});
-
 const sourceCodeSchema = new Schema({
   lineNumber: Number,
   codeLine: String,
   documentTitle: String
-})
+});
 
-
-const codelineSchema = new Schema({
-  code: String
-})
-
+const exceptionSchema = new Schema({
+  exception: [[logSchema]],
+  log: [],
+  sourceCode: [[sourceCodeSchema]]
+});
 
 
 const Exception = mongoose.model('Exception', exceptionSchema);
 const Log = mongoose.model('Log', logSchema);
 const SourceCode = mongoose.model('SourceCode', sourceCodeSchema);
-const Codeline = new mongoose.model('Codeline', codelineSchema);
+
 
 module.exports = {
   Exception, 
-  Log,
-  SourceCode, 
-  Codeline
+  Log, 
+  SourceCode
 }

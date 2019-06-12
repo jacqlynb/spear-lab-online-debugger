@@ -8,7 +8,7 @@ const log = (props) => {
           <p>Line number: {e.lineNumber}</p>
           <p>Method name: {e.methodName}</p>
           <p>Class name: {e.className}</p>
-          <p>Content: {e.content}</p>
+          {/* <p>Content: {e.content}</p> will content be necessary to display?? */} 
         </div>
       );
     })

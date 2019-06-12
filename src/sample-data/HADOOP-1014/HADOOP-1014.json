@@ -1,0 +1,93 @@
+{
+  "exception": [
+    [
+      {
+        "lineNumber": 366,
+        "column": 0,
+        "methodName": "getFiles",
+        "className": "InMemoryFileSystem",
+        "content": "/**\n * This API getClosedFiles could have been implemented over listPathsRaw\n * but it is an overhead to maintain directory structures for this impl of\n * the in-memory fs.\n */\npublic Path[] getFiles(PathFilter filter) {\n    synchronized (this) {\n        List<String> closedFilesList = new ArrayList<String>();\n        synchronized (pathToFileAttribs) {\n            Set paths = pathToFileAttribs.keySet();\n            if (paths == null || paths.isEmpty()) {\n                return new Path[0];\n            }\n            Iterator iter = paths.iterator();\n            while (iter.hasNext()) {\n                String f = (String) iter.next();\n                if (filter.accept(new Path(f))) {\n                    closedFilesList.add(f);\n                }\n            }\n        }\n        String[] names = closedFilesList.toArray(new String[closedFilesList.size()]);\n        Path[] results = new Path[names.length];\n        for (int i = 0; i < names.length; i++) {\n            results[i] = new Path(names[i]);\n        }\n        return results;\n    }\n}"
+      },
+      {
+        "lineNumber": 366,
+        "column": 0,
+        "methodName": "getFiles",
+        "className": "InMemoryFileSystem",
+        "content": "/**\n * This API getClosedFiles could have been implemented over listPathsRaw\n * but it is an overhead to maintain directory structures for this impl of\n * the in-memory fs.\n */\npublic Path[] getFiles(PathFilter filter) {\n    synchronized (this) {\n        List<String> closedFilesList = new ArrayList<String>();\n        synchronized (pathToFileAttribs) {\n            Set paths = pathToFileAttribs.keySet();\n            if (paths == null || paths.isEmpty()) {\n                return new Path[0];\n            }\n            Iterator iter = paths.iterator();\n            while (iter.hasNext()) {\n                String f = (String) iter.next();\n                if (filter.accept(new Path(f))) {\n                    closedFilesList.add(f);\n                }\n            }\n        }\n        String[] names = closedFilesList.toArray(new String[closedFilesList.size()]);\n        Path[] results = new Path[names.length];\n        for (int i = 0; i < names.length; i++) {\n            results[i] = new Path(names[i]);\n        }\n        return results;\n    }\n}"
+      },
+      {
+        "lineNumber": 476,
+        "column": 0,
+        "methodName": "getFiles",
+        "className": "InMemoryFileSystem",
+        "content": "public Path[] getFiles(PathFilter filter) {\n    return ((RawInMemoryFileSystem) getRawFileSystem()).getFiles(filter);\n}"
+      },
+      {
+        "lineNumber": 477,
+        "column": 0,
+        "methodName": "getFiles",
+        "className": "PathFilter"
+      },
+      {
+        "lineNumber": 477,
+        "column": 0,
+        "methodName": "getRawFileSystem"
+      },
+      {
+        "lineNumber": 370,
+        "column": 0,
+        "methodName": "keySet",
+        "className": "Map"
+      },
+      {
+        "lineNumber": 371,
+        "column": 0,
+        "methodName": "isEmpty",
+        "className": "Set"
+      },
+      {
+        "lineNumber": 374,
+        "column": 0,
+        "methodName": "iterator",
+        "className": "Set"
+      },
+      {
+        "lineNumber": 376,
+        "column": 0,
+        "methodName": "next",
+        "className": "Iterator"
+      },
+      {
+        "lineNumber": 377,
+        "column": 0,
+        "methodName": "accept",
+        "className": "Path"
+      },
+      {
+        "lineNumber": 378,
+        "column": 0,
+        "methodName": "add",
+        "className": "List"
+      },
+      {
+        "lineNumber": 375,
+        "column": 0,
+        "methodName": "hasNext",
+        "className": "Iterator"
+      },
+      {
+        "lineNumber": 383,
+        "column": 0,
+        "methodName": "toArray",
+        "className": "List"
+      },
+      {
+        "lineNumber": 383,
+        "column": 0,
+        "methodName": "size",
+        "className": "List"
+      }
+    ]
+  ],
+  "log": []
+}

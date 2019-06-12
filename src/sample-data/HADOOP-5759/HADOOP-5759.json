@@ -1,0 +1,148 @@
+{
+  "exception": [
+    [
+      {
+        "lineNumber": 78,
+        "column": 0,
+        "methodName": "run",
+        "className": "EagerTaskInitializationListener.InitJob",
+        "content": "public void run() {\n    try {\n        LOG.info(\"Initializing \" + job.getJobID());\n        job.initTasks();\n    } catch (Throwable t) {\n        LOG.error(\"Job initialization failed:\\n\" + StringUtils.stringifyException(t));\n        if (job != null) {\n            job.fail();\n        }\n    }\n}"
+      },
+      {
+        "lineNumber": 83,
+        "column": 0,
+        "methodName": "error",
+        "className": "Solving StringUtils"
+      },
+      {
+        "lineNumber": 84,
+        "column": 0,
+        "methodName": "stringifyException",
+        "className": "StringUtils"
+      },
+      {
+        "lineNumber": 2199,
+        "column": 0,
+        "methodName": "fail",
+        "className": "JobInProgress",
+        "content": "/**\n * Fails the job and all its component tasks.\n */\nsynchronized void fail() {\n    terminate(JobStatus.FAILED);\n}"
+      },
+      {
+        "lineNumber": 2200,
+        "column": 0,
+        "methodName": "terminate",
+        "className": "FAILED"
+      },
+      {
+        "lineNumber": 80,
+        "column": 0,
+        "methodName": "info",
+        "className": "JobInProgress"
+      },
+      {
+        "lineNumber": 80,
+        "column": 0,
+        "methodName": "getJobID",
+        "className": "JobInProgress"
+      },
+      {
+        "lineNumber": 81,
+        "column": 0,
+        "methodName": "initTasks",
+        "className": "JobInProgress"
+      }
+    ],
+    [
+      {
+        "lineNumber": 319,
+        "column": 0,
+        "methodName": "createCache",
+        "className": "JobInProgress",
+        "content": "private Map<Node, List<TaskInProgress>> createCache(JobClient.RawSplit[] splits, int maxLevel) {\n    Map<Node, List<TaskInProgress>> cache = new IdentityHashMap<Node, List<TaskInProgress>>(maxLevel);\n    for (int i = 0; i < splits.length; i++) {\n        String[] splitLocations = splits[i].getLocations();\n        if (splitLocations.length == 0) {\n            nonLocalMaps.add(maps[i]);\n            continue;\n        }\n        for (String host : splitLocations) {\n            Node node = jobtracker.resolveAndAddToTopology(host);\n            LOG.info(\"tip:\" + maps[i].getTIPId() + \" has split on node:\" + node);\n            for (int j = 0; j < maxLevel; j++) {\n                List<TaskInProgress> hostMaps = cache.get(node);\n                if (hostMaps == null) {\n                    hostMaps = new ArrayList<TaskInProgress>();\n                    cache.put(node, hostMaps);\n                    hostMaps.add(maps[i]);\n                }\n                // we process one TIP at a time sequentially in the split-size order\n                if (hostMaps.get(hostMaps.size() - 1) != maps[i]) {\n                    hostMaps.add(maps[i]);\n                }\n                node = node.getParent();\n            }\n        }\n    }\n    return cache;\n}"
+      },
+      {
+        "lineNumber": 325,
+        "column": 0,
+        "methodName": "getLocations"
+      },
+      {
+        "lineNumber": 347,
+        "column": 0,
+        "methodName": "add",
+        "className": "TaskInProgress"
+      },
+      {
+        "lineNumber": 332,
+        "column": 0,
+        "methodName": "resolveAndAddToTopology",
+        "className": "JobTracker"
+      }
+    ],
+    [
+      {
+        "lineNumber": 332,
+        "column": 0,
+        "methodName": "resolveAndAddToTopology",
+        "className": "JobTracker"
+      },
+      {
+        "lineNumber": 2422,
+        "column": 0,
+        "methodName": "resolveAndAddToTopology",
+        "className": "JobTracker",
+        "content": "public Node resolveAndAddToTopology(String name) {\n    List<String> tmpList = new ArrayList<String>(1);\n    tmpList.add(name);\n    List<String> rNameList = dnsToSwitchMapping.resolve(tmpList);\n    String rName = rNameList.get(0);\n    String networkLoc = NodeBase.normalize(rName);\n    return addHostToNodeMapping(name, networkLoc);\n}"
+      },
+      {
+        "lineNumber": 2424,
+        "column": 0,
+        "methodName": "add",
+        "className": "List"
+      },
+      {
+        "lineNumber": 41,
+        "column": 0,
+        "methodName": "resolve",
+        "className": "DNSToSwitchMapping",
+        "content": "/**\n * Resolves a list of DNS-names/IP-addresses and returns back a list of\n * switch information (network paths). One-to-one correspondence must be\n * maintained between the elements in the lists.\n * Consider an element in the argument list - x.y.com. The switch information\n * that is returned must be a network path of the form /foo/rack,\n * where / is the root, and 'foo' is the switch where 'rack' is connected.\n * Note the hostname/ip-address is not part of the returned path.\n * The network topology of the cluster would determine the number of\n * components in the network path.\n * @param names\n * @return list of resolved network paths\n */\npublic List<String> resolve(List<String> names);"
+      },
+      {
+        "lineNumber": 2426,
+        "column": 0,
+        "methodName": "get",
+        "className": "List"
+      },
+      {
+        "lineNumber": 101,
+        "column": 0,
+        "methodName": "normalize",
+        "className": "NodeBase",
+        "content": "/**\n * Normalize a path\n */\npublic static String normalize(String path) {\n    if (path == null || path.length() == 0)\n        return ROOT;\n    if (path.charAt(0) != PATH_SEPARATOR) {\n        throw new IllegalArgumentException(\"Network Location path does not start with \" + PATH_SEPARATOR_STR + \": \" + path);\n    }\n    int len = path.length();\n    if (path.charAt(len - 1) == PATH_SEPARATOR) {\n        return path.substring(0, len - 1);\n    }\n    return path;\n}"
+      },
+      {
+        "lineNumber": 110,
+        "column": 0,
+        "methodName": "length",
+        "className": "String"
+      },
+      {
+        "lineNumber": 111,
+        "column": 0,
+        "methodName": "charAt",
+        "className": "String"
+      },
+      {
+        "lineNumber": 112,
+        "column": 0,
+        "methodName": "substring",
+        "className": "String"
+      },
+      {
+        "lineNumber": 2428,
+        "column": 0,
+        "methodName": "addHostToNodeMapping",
+        "className": "JobTracker"
+      }
+    ]
+  ],
+  "log": []
+}
