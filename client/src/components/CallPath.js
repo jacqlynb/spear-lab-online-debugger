@@ -1,6 +1,6 @@
 import React from 'react';
-import './CallPath.css'
 import LoggingPoint from './LoggingPoint';
+import './CallPath.css'
 
 const callpath = (props) => {
   return (
