@@ -34,6 +34,7 @@ fs.readdir(dirName, (err, files) => {
       // new exception document for each subdirectory
       let currentException = new Exception(
         { 
+          title: outerDirName.replace('/', ''),
           exception: null,
           log: null,
           sourceCode: null

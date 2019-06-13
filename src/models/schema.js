@@ -16,11 +16,11 @@ const sourceCodeSchema = new Schema({
 });
 
 const exceptionSchema = new Schema({
+  title: String,
   exception: [[logSchema]],
   log: [],
   sourceCode: [[sourceCodeSchema]]
 });
-
 
 const Exception = mongoose.model('Exception', exceptionSchema);
 const Log = mongoose.model('Log', logSchema);
