@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const logSchema = new Schema({
+  fileName: String,
   lineNumber: Number,
   column: Number,
   methodName: String,
@@ -19,7 +20,7 @@ const exceptionSchema = new Schema({
   title: String,
   exception: [[logSchema]],
   log: [],
-  sourceCode: [[sourceCodeSchema]]
+  sourceCode: []
 });
 
 const Exception = mongoose.model('Exception', exceptionSchema);

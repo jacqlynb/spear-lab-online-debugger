@@ -24,65 +24,110 @@ fs.readdir(dirName, (err, files) => {
   files.map(file => { 
     let outerDir = fs.statSync(dirName + file);
     
+    let fileName = '';
+    let sourceCode = [];
+    let sourceCodeElement = {};
+    let codeLines = [];
+    
     // if the file is a subdirectory...
     if (outerDir.isDirectory()) {
       let outerDirName = file + '/';
       const innerDir = fs.readdirSync(dirName + file, { encoding: 'utf8' });
-
-      const sourceCode = [];
-
+      
       // new exception document for each subdirectory
       let currentException = new Exception(
         { 
           title: outerDirName.replace('/', ''),
           exception: null,
           log: null,
-          sourceCode: null
+          sourceCode: [{ fileName: null, codeLines: [] }]
         });
+        
+        // now map over each file in subdirectory
+        innerDir.map(file => {
+          let filePath = dirName + outerDirName + file;
+          
+          // const exceptionSchema = new Schema({
+          //   title: String,
+          //   exception: [[logSchema]],
+          //   log: [],
+          //   sourceCode: [{fileName: String, codeLines: [sourceCodeSchema]}]
+          // });
+          
+          // if .json extension, save as exception data
+          if (file.includes('.json')) {
+            let fileString = fs.readFileSync(filePath).toString();
+            let fileStringParsed = JSON.parse(fileString);
+            let exception = fileStringParsed.exception;
+            let log = fileStringParsed.log;
+  
+            // only one .json file per directory, so can be added to exception document now
+            currentException.exception = exception;
+            currentException.log = log;
+          }
 
-      // now map over each file in subdirectory
-      innerDir.map(file => {
-        let filePath = dirName + outerDirName + file;
+          // if .java extension, save as source code data
+          if (file.includes('.java')) {
+            // create new source code element
+            fileName = file;
+            console.log("1 Source code file name = " + sourceCodeElement.fileName);
+            
+            let fileString = fs.readFileSync(filePath).toString();
+            let fileStringTokenized = fileString.split('\n');
+  
+            fileStringTokenized.map((line, index) => {
+              let currentLine = new SourceCode({
+                lineNumber: index + 1,
+                codeLine: line,
+              })
+              codeLines.push(currentLine);
+            });
+            sourceCodeElement.codeLines = codeLines;
+            sourceCodeElement.fileName = fileName;
+            console.log("source code element before pushing: ", sourceCodeElement.fileName)
+            sourceCode.push(sourceCodeElement);
+            sourceCodeElement = {};
+          }
+        });
+        console.log("2 Source code file name = " + sourceCode[0].fileName);
 
-        // if .json extension, save as exception data
-        if (file.includes('.json')) {
-          let fileString = fs.readFileSync(filePath).toString();
-          let fileStringParsed = JSON.parse(fileString);
-          let exception = fileStringParsed.exception;
-          let log = fileStringParsed.log;
-
-          // only one .json file per directory, so can be added to exception document now
-          currentException.exception = exception;
-          currentException.log = log;
-        }
-
-        // if .java extension, save as source code data
-        if (file.includes('.java')) {
-          let fileString = fs.readFileSync(filePath).toString();
-          let fileName = file;
-          let fileStringTokenized = fileString.split('\n');
-
-          fileStringTokenized.map((line, index) => {
-            currentLine = new SourceCode({
-              lineNumber: index + 1,
-              codeLine: line,
-              documentTitle: fileName
-            })
-
-            sourceCode.push(currentLine);
+        if (currentException.exception) {
+          currentException.exception.forEach(callPath => {
+            callPath.forEach(callPathElem => {
+              sourceCode.forEach(sourceCodeElem => {
+                sourceCodeElem.codeLines.forEach(line => {
+                  if (callPathElem.lineNumber == line.lineNumber 
+                      && line.codeLine.includes(callPathElem.methodName)) {
+                        callPathElem.fileName = sourceCodeElem.fileName;
+                  }
+                })
+              })
+            });
           });
         }
-      });
 
+        if (currentException.log) {
+          currentException.log.forEach(callPath => {
+            callPath.forEach(element => {
+              sourceCode.forEach(line => {
+                if (element.lineNumber == line.lineNumber && line.codeLine.includes(element.methodName)) {
+                  element.fileName = line.documentTitle;
+                }
+              })
+            });
+          })
+        }
+    
       // after mapping over all files is completed, finally add source code array to exception object
       currentException.sourceCode = sourceCode;
+      console.log("3 Source code file name = " + currentException.sourceCode[0].fileName);
 
       // save current exception document to database
       currentException.save().then(() => {
-        console.log(currentException);
+        // console.log(currentException.sourceCode.fileName);
       }).catch(err => {
         console.log(err);
       })
-    }
+    };
   });
 }); 

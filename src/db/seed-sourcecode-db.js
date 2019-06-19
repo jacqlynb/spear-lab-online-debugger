@@ -1,50 +1,66 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
-const schema = require('../models/schema.js');
-const SourceCode = schema.SourceCode;
+const Schema = require('../models/schema.js');
 
-mongoose.connect('mongodb://127.0.0.1:27017/sample-data', {
+
+mongoose.connect('mongodb://127.0.0.1:27017/test', {
   useNewUrlParser: true, 
   useCreateIndex: true
 }).catch((error) => {
   console.log(error);
 })
 
-let fileString1 = (fs.readFileSync('../sample-data/FSDataInputStream.java')).toString();
-let fileName1 = "FSDataInputStream.java";
+const exceptionSchema = new mongoose.Schema({
+  title: String,
+  exception: [],
+  log: [],
+  sourceCode: []
+});
 
-let fileString2 = (fs.readFileSync('../sample-data/FSInputStream.java')).toString();
-let fileName2 = "FSInputStream.java";
+const Exception = mongoose.model('Thing', exceptionSchema);
 
-// Seed first document
-fileString1Split = fileString1.split('\n');
-fileString1Split.map((line, index) => {
-  currentLine = new SourceCode({
-    lineNumber: index + 1,
-    codeLine: line,
-    documentTitle: fileName1
-  })
-  currentLine.save().then(() => {
-    console.log(currentLine);
-  }).catch((error) => {
-    console.log(error);
-  })
-  return(currentLine);
-})
+const currentException = new Exception({
+  exception:[[
+    {
+      fileName: 'file1',
+      lineNumber: 1,
+      column: 0,
+      methodName: 'method1',
+      className: 'class1',
+      content: 'content1'
+    },
+    {
+      fileName: 'file2',
+      lineNumber: 2,
+      column: 0,
+      methodName: 'method2',
+      className: 'class2',
+      content: 'content2'
+    }]
+  ],
+  log: [],
+  sourceCode: [
+    {
+      fileName: 'file1',
+      codeLines: [{lineNumber: 1, codeLine: 'line1', documentTitle: 'title1'}]
+    }, 
+    {
+      fileName: 'file1',
+      codeLines: [{lineNumber: 2, codeLine: 'line2', documentTitle: 'title2'}]
+    }]
+});
 
-// Seed second document
-fileString2Split = fileString2.split('\n');
-fileString2Split.map((line, index) => {
-  currentLine = new SourceCode({
-    lineNumber: index + 1,
-    codeLine: line,
-    documentTitle: fileName2
-  })
-  currentLine.save().then(() => {
-    console.log(currentLine);
-  }).catch((error) => {
-    console.log(error);
-  })
-  return(currentLine);
-})
+currentException.save().then(() => {
+  console.log('saved');
+}).catch(err => {
+  console.log(err);
+}) 
+
+          // const exceptionSchema = new Schema({
+          //   title: String,
+          //   exception: [[logSchema]],
+          //   log: [],
+          //   sourceCode: [{fileName: String, codeLines: [sourceCodeSchema]}]
+          // });
+          
 
