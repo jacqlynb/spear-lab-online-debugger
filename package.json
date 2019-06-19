@@ -16,6 +16,7 @@
     "mongoose": "^5.5.12",
     "n-readlines": "^1.0.0",
     "nodemon": "^1.19.1",
+    "prop-types": "^15.7.2",
     "react-highlight-words": "^0.16.0"
   },
   "devDependencies": {

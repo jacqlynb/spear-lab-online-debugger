@@ -1,0 +1,17 @@
+.Issue {
+  border-bottom: 1px solid gray;
+  margin: 15px 30px 15px 30px;
+}
+
+.issueText {
+  cursor: pointer;
+}
+
+.currentIssueText {
+  font-weight: bold;
+}
+
+.issueText:hover {
+  background: lightgray;
+}
+

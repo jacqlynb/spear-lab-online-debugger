@@ -1,6 +1,6 @@
-.sourceCode {
+.sourceCode  {
   /* margin-top: 50px; */
-  padding-left: 40px;
+  padding-left: 20px;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   font-size: 14px;
@@ -14,10 +14,14 @@
 }
 
 .lineFormatting {
-  padding-right: 50px;
+  padding-right: 30px;
   white-space: pre;
 }
 
 .highlight {
   background: yellow;
+}
+
+.targetLine {
+  background: aqua;
 }

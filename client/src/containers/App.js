@@ -1,100 +1,167 @@
-import React, { Component } from 'react';
-import CallPath from '../components/CallPath';
-import CodeLine from '../components/CodeLine';
+import React, { PureComponent } from 'react';
+import ExceptionContainer from '../components/ExceptionContainer';
+import LogContainer from '../components/LogContainer';
+import SourceCodeContainer from '../components/SourceCodeContainer';
+import Issues from '../components/Issues';
 import './App.css';
 
-class App extends Component {
-  state = {
-    exceptionData: null,
-    log: [], 
-    sourceCode: null, 
-    lineNumbers: null,
+class App extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.fetchDocument = this.fetchDocument.bind(this);
+    this.handleFileChanged = this.handleFileChanged.bind(this);
   }
+
+  state = {
+    exceptionData: [],
+    logData: [],
+    sourceCode: [],
+    linesToHighlight: [],
+    issues: [],
+    currentIssue: null,
+    currentFile: '',
+    currentCodeLine: null
+  };
 
   componentDidMount() {
-    this.fetchData()
-      .then(data => {
-        let relevantLineNumbers = data[0][0].exception.map(exceptionElements => {
-          return exceptionElements.map((callPath) => {
-           return callPath.lineNumber;
-          })
-        })
-
-        let relevantLineNumbersJoined = [];
-        relevantLineNumbers.map(lineNumberArray => {
-          return lineNumberArray.map(lineNumber => {
-            relevantLineNumbersJoined.push(lineNumber);
-            return lineNumber;
-          })
-        })
-
-        console.log(relevantLineNumbersJoined)
-
-        this.setState({
-          exceptionData: data[0][0].exception,
-          log: data[0][0].log,
-          sourceCode: data[1],
-          lineNumbers: relevantLineNumbersJoined
-        });
-      }).catch((err) => console.log(err));
+    this.fetchIssues()
+      .then(issues => {
+        this.setState({ issues });
+      })
+      .catch(err => console.log(err));
   }
-  
+
   render() {
+    const { issues, exceptionData, logData, sourceCode, linesToHighlight, 
+            currentCodeLine, currentFile } = this.state;
 
-    let callPathElements;
-    if (this.state.exceptionData) {
-      callPathElements = this.state.exceptionData.map((callPathElement, index) => {
-        return (
-          <CallPath 
-          callPathElement={this.state.exceptionData[index]}/>
-        )
-      });
-    } 
-    else {
-      callPathElements = null;
-    }
+    console.log("App.js currentFile: ", currentFile);
 
-    let codelines;
-    if (this.state.sourceCode) {
-      codelines = this.state.sourceCode.map((codeline, index) => {
-        return (
-          <CodeLine 
-            line={this.state.sourceCode[index].lineNumber}
-            code={this.state.sourceCode[index].codeLine} 
-            linesToHighlight={this.state.lineNumbers}
+    const issuesMarkup =
+      issues.length === 0 ? null : (
+        <div className="issues">
+          <p className="issuesHeader">Issues:</p>
+          <Issues
+            clicked={this.handleTitleClicked.bind(this)}
+            issues={this.state.issues}
+            currentIssue={this.state.currentIssue}
           />
-        )
-      });
-    }
-    else {
-      codelines = null;
-    }
+        </div>
+      );
+
+    const exceptionMarkup = 
+      exceptionData.length === 0? null : (
+        <div className="exception">
+          <p className="exceptionHeader">Exception: </p>
+          <ExceptionContainer 
+            // sourceCode={sourceCode}
+            exceptionData={exceptionData} 
+            click={this.handleFileChanged}
+          />
+        </div>
+      );
+      
+
+    const logMarkup = 
+      logData.length === 0 ? null : (
+        <div className="log">
+          <p className="exceptionHeader">Log: </p>
+          <LogContainer logData={logData} />
+        </div>
+      );
+
+     const codelines = 
+      sourceCode.length === 0 ? null : (
+        <div className="sourceCode">
+          <p className="sourceCodeHeader">Source Code: </p>
+          <SourceCodeContainer 
+            sourceCode={sourceCode}
+            linesToHighlight={linesToHighlight}
+            file={currentFile}
+            codeLine={currentCodeLine}/>
+        </div>
+      );
 
     return (
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
-          <div className="fileTree">
-          </div>
+          {issuesMarkup}
           <div className="callPath">
-            <p className="exception-header">Exception: </p>
-            {callPathElements}
-            <p className="exception-header">Log: {this.state.log}</p>
+            {exceptionMarkup}
+            {logMarkup}
           </div>
-          <div className="sourceCode"> 
-            {codelines}
-          </div>
+          <div className="sourceCode">{codelines}</div>
         </div>
       </div>
     );
   }
 
-  fetchData = async () => {
+  showLoggingPoint(fileName, lineNumber) {
+    console.log("show logging point App.js " + fileName + " " + lineNumber);
+  }
+
+  handleFileChanged(fileName, lineNumber) {
+    console.log("App.js file name is: " + fileName.toString());
+    console.log("App.js current file set?")
+    this.setState({
+      currentFile: fileName,
+      currentCodeLine: lineNumber
+    });
+  }
+
+  getLinesToHighlight() {
+    const { exceptionData, logData } = this.state
+    let exceptionLineNumbers = [];
+    if (exceptionData.length !== 0) {
+      exceptionData.forEach(exception => {
+        exception.forEach(loggingPoint => {
+          exceptionLineNumbers.push(loggingPoint.lineNumber)
+        })
+      })
+    }
+    let logLineNumbers = [];
+    if (logData.length !== 0) {
+      logData.forEach(log => {
+        log.forEach(loggingPoint => {
+          logLineNumbers.push(loggingPoint.lineNumber)
+        })
+      });
+    }
+    const lineNumbers = exceptionLineNumbers.concat(logLineNumbers);
+    this.setState({ linesToHighlight: lineNumbers });
+  }
+
+  handleTitleClicked(title) {
+    this.setState({ currentIssue: title }, this.fetchDocument);
+  }
+
+  fetchIssues = async () => {
     try {
-      const data = await fetch('/hello');
+      const data = await fetch("/hello");
       return data.json();
-    } catch(error) {
-      console.log('Error in callApi', error);
+    } catch (error) {
+      console.log("Error in callApi", error);
+    }
+  };
+
+  fetchDocument = async () => {
+    try {
+      const data = await fetch("/callpath", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post: this.state.currentIssue })
+      });
+      const body = await data.text();
+      const bodyParsed = JSON.parse(body);
+      this.setState({
+        exceptionData: bodyParsed.exception,
+        logData: bodyParsed.log,
+        sourceCode: bodyParsed.sourceCode
+      });
+      this.getLinesToHighlight();
+    } catch (error) {
+      console.log("error", error);
     }
   };
 }

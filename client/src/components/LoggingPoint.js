@@ -1,18 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './LoggingPoint.css';
 
 const log = (props) => {
-  let logs = props.exceptionElement.map((e) => {
+  let loggingPoints = props.loggingPointData.map((e, index) => {
+    // console.log('[LoggingPoint.js: file name:  ', e.fileName)
+    // console.log('[LoggingPoint.js: line number:  ', e.lineNumber)
       return (
         <div className="LoggingPoint">
-          <p>Line number: {e.lineNumber}</p>
-          <p>Method name: {e.methodName}</p>
-          <p>Class name: {e.className}</p>
-          {/* <p>Content: {e.content}</p> will content be necessary to display?? */} 
+          <p key={index} onClick={() => props.loggingPointClicked(e.fileName, e.lineNumber)}>
+            <span className="fileName">{e.fileName}:{e.lineNumber}</span>
+            <span>{e.methodName} </span>
+          </p>
         </div>
       );
     })
-  return (logs);
+  return loggingPoints;
+}
+
+log.propType = {
+  clicked: PropTypes.func
 }
 
 export default log;

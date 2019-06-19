@@ -10,35 +10,54 @@
   box-shadow: 0 2px 3px rgb(116, 121, 124); 
 }
 
-.exception-header {
-  font-size: larger;
-  font-weight: bold;
-  padding-left: 20px;
-}
-
 .container {
   height: 100%;
   display: flex;
   flex-direction: row;
 }
 
-.fileTree {
-  flex: 2;
+.exceptionHeader {
+  font-size: larger;
+  font-weight: bold;
+  padding-left: 20px;
+}
+
+.issuesHeader {
+  font-size: larger;
+  font-weight: bold;
+  padding-left: 30px;
+  padding-bottom: 20px;
+}
+
+.sourceCodeHeader {
+  font-size: larger;
+  font-weight: bold;
+  padding-left: 20px;
+}
+
+.issues {
+  flex: 4;
+  padding-top: 80px;
+  border-right: 1px solid #ddd;
+  /* box-shadow: 2px 0 3px rgb(161, 161, 161); */
 }
 
 .callPath {
   height: 100%;
-  padding-top: 70px;
+  padding-top: 80px;
   overflow: auto;
-  flex: 5;
+  flex: 11;
   background: white;
-  border-right: 1px solid #eee;
-  box-shadow: 0 2px 3px rgb(161, 161, 161);
+  border-right: 1px solid #ddd;
+  /* box-shadow: 2px 0 3px rgb(161, 161, 161); */
 }
 
 .sourceCode {
-  flex: 6;
-  margin-top: 80px;
+  flex: 16;
+  padding-top: 40px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
 }
 
 code {

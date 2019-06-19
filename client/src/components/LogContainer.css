@@ -1,10 +1,10 @@
-.CallPath {
+.LogContainer {
   border: 1px solid rgb(233, 233, 233);
-  margin: 15px 20px 50px 15px;
+  margin: 20px 20px 50px 20px;
   background: rgb(233, 233, 233);
 }
 
-.callpath-header {
+.logContainer-header {
   padding-left: 20px;
   font-weight: bold;
 }
