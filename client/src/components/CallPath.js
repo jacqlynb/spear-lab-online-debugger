@@ -9,7 +9,6 @@ class Callpath extends React.Component {
 
   }
   
-
   showLoggingPoint(fileName, lineNumber) {
     console.log('called');
     console.log(fileName.toString());

@@ -8,10 +8,12 @@ const log = (props) => {
     // console.log('[LoggingPoint.js: line number:  ', e.lineNumber)
       return (
         <div className="LoggingPoint">
-          <p key={index} onClick={() => props.loggingPointClicked(e.fileName, e.lineNumber)}>
-            <span className="fileName">{e.fileName}:{e.lineNumber}</span>
-            <span>{e.methodName} </span>
-          </p>
+        <p className="loggingPointText"
+           key={index} onClick={() => 
+           props.loggingPointClicked(e.fileName, e.lineNumber)}>
+          <span className="fileName">{e.fileName}:{e.lineNumber}</span>
+          <span>{e.methodName} </span>
+        </p>
         </div>
       );
     })

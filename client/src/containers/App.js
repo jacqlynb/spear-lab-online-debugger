@@ -18,7 +18,7 @@ class App extends PureComponent {
     sourceCode: [],
     linesToHighlight: [],
     issues: [],
-    currentIssue: null,
+    currentIssues: [],
     currentFile: '',
     currentCodeLine: null
   };
@@ -44,7 +44,7 @@ class App extends PureComponent {
           <Issues
             clicked={this.handleTitleClicked.bind(this)}
             issues={this.state.issues}
-            currentIssue={this.state.currentIssue}
+            currentIssues={this.state.currentIssues}
           />
         </div>
       );
@@ -133,7 +133,11 @@ class App extends PureComponent {
   }
 
   handleTitleClicked(title) {
-    this.setState({ currentIssue: title }, this.fetchDocument);
+    // const currentIssues = [...this.state.currentIssues];
+    // if (currentIssues.length <= 1) {
+    //   currentIssues.push(title)
+    // }
+    this.setState({ currentIssues: title }, this.fetchDocument);
   }
 
   fetchIssues = async () => {
@@ -150,7 +154,7 @@ class App extends PureComponent {
       const data = await fetch("/callpath", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post: this.state.currentIssue })
+        body: JSON.stringify({ post: this.state.currentIssues })
       });
       const body = await data.text();
       const bodyParsed = JSON.parse(body);
