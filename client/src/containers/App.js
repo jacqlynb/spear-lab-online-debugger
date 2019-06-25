@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
+import Autosuggest from 'react-autosuggest';
 import ExceptionContainer from '../components/ExceptionContainer';
 import LogContainer from '../components/LogContainer';
 import SourceCodeContainer from '../components/SourceCodeContainer';
 import Issues from '../components/Issues';
+import TestSearch from '../components/TestSearch'
 import './App.css';
 
 class App extends PureComponent {
@@ -18,9 +20,12 @@ class App extends PureComponent {
     sourceCode: [],
     linesToHighlight: [],
     issues: [],
-    currentIssues: [],
+    currentIssues: null,
     currentFile: '',
-    currentCodeLine: null
+    secondFile: '',
+    currentCodeLine: null,
+    secondCodeLine: null,
+    currentLoggingPoint: ''
   };
 
   componentDidMount() {
@@ -33,9 +38,10 @@ class App extends PureComponent {
 
   render() {
     const { issues, exceptionData, logData, sourceCode, linesToHighlight, 
-            currentCodeLine, currentFile } = this.state;
+            currentCodeLine, currentFile, secondFile, secondCodeLine } = this.state;
 
     console.log("App.js currentFile: ", currentFile);
+    console.log("App.js secondFile: ", secondFile);
 
     const issuesMarkup =
       issues.length === 0 ? null : (
@@ -57,10 +63,13 @@ class App extends PureComponent {
             // sourceCode={sourceCode}
             exceptionData={exceptionData} 
             click={this.handleFileChanged}
+            currentFile={currentFile}
+            currentCodeLine={currentCodeLine}
+            secondFile={secondFile}
+            secondCodeLine={secondCodeLine}
           />
         </div>
       );
-      
 
     const logMarkup = 
       logData.length === 0 ? null : (
@@ -78,7 +87,9 @@ class App extends PureComponent {
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
-            codeLine={currentCodeLine}/>
+            secondFile={secondFile}
+            codeLine={currentCodeLine}
+            secondCodeLine={secondCodeLine}/>
         </div>
       );
 
@@ -86,7 +97,9 @@ class App extends PureComponent {
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
+          <div className="issueCntainer">
           {issuesMarkup}
+          </div>
           <div className="callPath">
             {exceptionMarkup}
             {logMarkup}
@@ -104,10 +117,18 @@ class App extends PureComponent {
   handleFileChanged(fileName, lineNumber) {
     console.log("App.js file name is: " + fileName.toString());
     console.log("App.js current file set?")
-    this.setState({
-      currentFile: fileName,
-      currentCodeLine: lineNumber
-    });
+    if (this.state.currentFile === '') {
+      this.setState({
+        currentFile: fileName,
+        currentCodeLine: lineNumber, 
+      });
+    }
+    else if (this.state.secondFile === '') {
+      this.setState({
+        secondFile: fileName,
+        secondCodeLine: lineNumber
+      });
+    }
   }
 
   getLinesToHighlight() {
@@ -133,11 +154,9 @@ class App extends PureComponent {
   }
 
   handleTitleClicked(title) {
-    // const currentIssues = [...this.state.currentIssues];
-    // if (currentIssues.length <= 1) {
-    //   currentIssues.push(title)
-    // }
-    this.setState({ currentIssues: title }, this.fetchDocument);
+    this.setState({ 
+      currentIssues: title,
+    }, this.fetchDocument);
   }
 
   fetchIssues = async () => {

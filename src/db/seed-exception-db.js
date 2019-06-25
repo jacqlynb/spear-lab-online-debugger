@@ -1,7 +1,6 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const schema = require('../models/schema.js');
-const Log = schema.Log;
 const Exception = schema.Exception;
 const SourceCode = schema.SourceCode;
 
@@ -27,7 +26,6 @@ fs.readdir(dirName, (err, files) => {
     let fileName = '';
     let sourceCode = [];
     let sourceCodeElement = {};
-    let codeLines = [];
     
     // if the file is a subdirectory...
     if (outerDir.isDirectory()) {
@@ -45,6 +43,7 @@ fs.readdir(dirName, (err, files) => {
         
         // now map over each file in subdirectory
         innerDir.map(file => {
+          let codeLines = [];
           let filePath = dirName + outerDirName + file;
           
           // const exceptionSchema = new Schema({
@@ -113,7 +112,7 @@ fs.readdir(dirName, (err, files) => {
                 if (element.lineNumber == line.lineNumber && line.codeLine.includes(element.methodName)) {
                   element.fileName = line.documentTitle;
                 }
-              })
+              });
             });
           })
         }

@@ -6,7 +6,6 @@ class Callpath extends React.Component {
   constructor(props) {
     super(props);
     this.showLoggingPoint = this.showLoggingPoint.bind(this);
-
   }
   
   showLoggingPoint(fileName, lineNumber) {
@@ -24,12 +23,14 @@ class Callpath extends React.Component {
         loggingPointData={this.props.callPathElement}
         log={this.props.log}
         loggingPointClicked={this.props.click}
+        currentFile={this.props.currentFile}
+        currentCodeLine={this.props.currentCodeLine}
+        secondFile={this.props.secondFile}
+        secondCodeLine={this.props.secondCodeLine}
       />
     </div>
-
     )
   }
-
 }
 
 export default Callpath;

@@ -1,4 +1,5 @@
-import React, {PureComponent} from "react";
+import React, { PureComponent } from 'react';
+import Autosuggest from 'react-autosuggest';
 import "./Issues.css";
 
 class Issues extends PureComponent {
@@ -6,7 +7,8 @@ class Issues extends PureComponent {
     const { issues, clicked } = this.props;
 
     return issues.map((issue, index) => {
-      let issueText = (issue === this.props.currentIssue) ? 'currentIssueText' : 'issueText';
+      console.log("issues.js currentissue: ", this.props.currentIssue)
+      let issueText = (issue === this.props.currentIssues) ? 'currentIssueText' : 'issueText';
       return (
         <div className="Issue" onClick={() => clicked(issue)} key={index}>
           <p className={issueText}>{issue}</p>

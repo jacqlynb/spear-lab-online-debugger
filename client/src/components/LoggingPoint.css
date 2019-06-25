@@ -9,9 +9,15 @@
   background-color: white;
 }
 
-.loggingPointText {
+.regularFileName {
   padding: 5px 5px 5px 5px;
   margin-right: 10px;
+}
+
+.boldFileName {
+  padding: 5px 5px 5px 5px;
+  margin-right: 10px;
+  font-weight: bold;
 }
 
 .loggingPointText:hover {

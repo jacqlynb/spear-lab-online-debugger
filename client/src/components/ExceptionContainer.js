@@ -1,5 +1,5 @@
 import React from 'react';
-import Callpath from './Callpath';
+import Callpath from './Callpath.js';
 
 class ExceptionContainer extends React.Component {
   constructor(props) {
@@ -19,6 +19,10 @@ class ExceptionContainer extends React.Component {
           <Callpath 
             clicked={this.props.click}
             callPathElement={callPathElement}
+            currentFile={this.props.currentFile}
+            currentCodeLine={this.props.currentCodeLine}
+            secondFile={this.props.secondFile}
+            secondCodeLine={this.propssecondCodeLine}
             key={index}
             click={this.props.click}
           />
