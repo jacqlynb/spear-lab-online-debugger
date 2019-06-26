@@ -4,8 +4,6 @@ import './LoggingPoint.css';
 
 const log = (props) => {
   let loggingPoints = props.loggingPointData.map((e, index) => {
-    // console.log('[LoggingPoint.js: file name:  ', e.fileName)
-    // console.log('[LoggingPoint.js: line number:  ', e.lineNumber)
     let currentFileToHighlight;
     if (e.fileName === props.currentFile && e.lineNumber === props.currentCodeLine ||
       e.fileName === props.secondFile && e.lineNumber === props.secondCodeLine) {

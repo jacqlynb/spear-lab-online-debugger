@@ -1,102 +1,109 @@
 import React from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import "react-tabs/style/react-tabs.css";
-import CodeLine from './CodeLine'
-import './SourceCodeContainer.css'
+import './SourceCodeContainer.css';
+import { Link, Element, Events, animateScroll as scroll, scroller } from 'react-scroll'
 
-const sourceCodeContainer = (props) => {
-  const { sourceCode, linesToHighlight, file, secondFile, codeLine, secondCodeLine } = props;
-  const codes = sourceCode.map((codeElement, index) => {
-    if (file === secondFile) {
-      if (codeElement.fileName === file) {
-        return (
-          <div>
-          <div className='sourceCodeBody'>
-          <Tabs>
-            <TabList>
-              <Tab>{codeElement.fileName}</Tab>
-            </TabList>
-          </Tabs>
-          <div className='sourceCodeBody'>
-            <CodeLine
-              code={codeElement.codeLines}
-              linesToHighlight={linesToHighlight}
-              fileName={file}
-              targetLineNumber={codeLine}
-              key={index}
-            />
-          </div> 
-          </div>
-          <div className='sourceCodeBody'>
-          <Tabs>
-            <TabList>
-              <Tab>{codeElement.fileName}</Tab>
-            </TabList>
-          </Tabs>
-          <div className='sourceCodeBody'>
-            <CodeLine
-              code={codeElement.codeLines}
-              linesToHighlight={linesToHighlight}
-              fileName={secondFile}
-              targetLineNumber={secondCodeLine}
-              key={index}
-            />
-          </div> 
-          </div>
-          </div>
-        )
-      }
-    }
-      if (codeElement.fileName === file) {
-        console.log('sourcecodecontainer codeElement: ', codeElement);
-        console.log('sourcecodecontainer call path filename', codeElement.fileName);
-        return (
-          <div className='sourceCodeBody'>
-          <Tabs>
-            <TabList>
-              <Tab>{codeElement.fileName}</Tab>
-            </TabList>
-          </Tabs>
-          <div className='sourceCodeBody'>
-            <CodeLine
-              code={codeElement.codeLines}
-              linesToHighlight={linesToHighlight}
-              fileName={file}
-              targetLineNumber={codeLine}
-              key={index}
-            />
-          </div> 
-          </div>
-        )
-      }
-      if (codeElement.fileName === secondFile) {
-        console.log("name equals second file");
-        return (
-          <div className='sourceCodeBody'>
-          <Tabs>
-            <TabList>
-              <Tab>{codeElement.fileName}</Tab>
-            </TabList>
-          </Tabs>
-          <div className='sourceCodeBody'>
-            <CodeLine
-              code={codeElement.codeLines}
-              linesToHighlight={linesToHighlight}
-              fileName={secondFile}
-              targetLineNumber={secondCodeLine}
-              key={index}
-            />
-          </div> 
-          </div>
-        )
-      }
-        
-      else {
-        console.log("SourceCodeContainer.js file: ", file);
-        return null;
-      }
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.scrollToTop = this.scrollToTop.bind(this);
+  }
+
+  componentDidMount() {
+    Events.scrollEvent.register('begin', () => {
+      console.log("begin", arguments);
     });
-  return codes;
-}
+    Events.scrollEvent.register('end', () => {
+      console.log("end", arguments);
+    });
+  }
 
-export default sourceCodeContainer;
+  scrollToTop() {
+    scroll.scrollToTop();
+  }
+  
+  scrollToWithContainer() {
+    let goToContainer = new Promise((resolve, reject) => {
+
+      Events.scrollEvent.register('end', () => {
+        resolve();
+        Events.scrollEvent.remove('end');
+      });
+
+      scroller.scrollTo('scroll-container', {
+        duration: 800,
+        delay: 0,
+        smooth: 'easeInOutQuart'
+      });
+    });
+
+    goToContainer.then(() =>
+      scroller.scrollTo('scroll-container-second-element', {
+        duration: 800,
+        delay: 0,
+        smooth: 'easeInOutQuart',
+        containerId: 'scroll-container'
+      })
+    );
+  }
+
+  componentWillUnmount() {
+    Events.scrollEvent.remove('begin');
+    Events.scrollEvent.remove('end');
+  }
+
+  render() {
+
+    const containerElements = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
+
+    const containerLinksMarkup = containerElements.map(elem => {
+      return (
+        <Link 
+          activeClass="active" 
+          to={elem} 
+          spy={true} 
+          smooth={true} 
+          duration={250} 
+          containerId="containerElement" 
+          style={{ display: 'inline-block', margin: '20px' }}>
+          Go to {elem}
+        </Link>
+      );
+    });
+
+    const containerElementsMarkup = containerElements.map(elem => {
+      return (
+        <Element name={elem} style={{marginBottom: '200px'}}>{elem} in container</Element>
+      )
+    })
+
+    return (
+      <div>
+          <nav className="navbar navbar-default navbar-fixed-top">
+            <div className="container-fluid">
+              <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul className="nav navbar-nav">
+                </ul>
+              </div>
+            </div>
+          </nav>
+          {containerLinksMarkup}
+          <Element 
+            name="test7" 
+            className="element" 
+            id="containerElement" 
+            style={{
+              position: 'relative',
+              height: '200px',
+              overflow: 'scroll',
+              marginBottom: '100px'
+            }}>
+            {containerElementsMarkup}
+          </Element>
+      </div>
+    );
+  }
+};
+
+export default App;
+
