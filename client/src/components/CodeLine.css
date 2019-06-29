@@ -12,11 +12,17 @@
 .highlight {
   padding-top: 2px;
   padding-bottom: 2px;
-  background: rgb(250, 250, 183);
+  background: rgb(255, 255, 219);
 }
 
 .targetLine {
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   background: yellow;
 }
+
+/* Need to find a better way to format the target line with a little padding on top */
+/* .targetLinePadding { 
+  line-height: 1px;
+  font-size: 2px;
+} */

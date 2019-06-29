@@ -1,17 +1,17 @@
-import React, { PureComponent } from 'react';
-import Autosuggest from 'react-autosuggest';
+import React from 'react';
+// import Autosuggest from 'react-autosuggest';
 import ExceptionContainer from '../components/ExceptionContainer';
 import LogContainer from '../components/LogContainer';
 import SourceCodeContainer from '../components/SourceCodeContainer';
 import Issues from '../components/Issues';
-import TestSearch from '../components/TestSearch'
+// import TestSearch from '../components/TestSearch'
 import './App.css';
 
-class App extends React.Component {
+class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.fetchDocument = this.fetchDocument.bind(this);
     this.handleFileChanged = this.handleFileChanged.bind(this);
+    this.handleIssueClicked = this.handleIssueClicked.bind(this);
   }
 
   state = {
@@ -20,7 +20,7 @@ class App extends React.Component {
     sourceCode: [],
     linesToHighlight: [],
     issues: [],
-    currentIssues: null,
+    currentIssue: null,
     currentFile: '',
     secondFile: '',
     currentCodeLine: null,
@@ -37,32 +37,40 @@ class App extends React.Component {
   }
 
   render() {
-    const { issues, exceptionData, logData, sourceCode, linesToHighlight, 
-            currentCodeLine, currentFile, secondFile, secondCodeLine } = this.state;
-
-    console.log("App.js currentFile: ", currentFile);
-    console.log("App.js secondFile: ", secondFile);
+    const {
+      issues,
+      currentIssue,
+      exceptionData,
+      logData,
+      sourceCode,
+      linesToHighlight,
+      currentCodeLine,
+      currentFile,
+      secondFile,
+      secondCodeLine,
+    } = this.state;
 
     const issuesMarkup =
       issues.length === 0 ? null : (
         <div className="issues">
+          {/* Use h2 or h3 instead of p tag */}
           <p className="issuesHeader">Issues:</p>
           <Issues
-            clicked={this.handleTitleClicked.bind(this)}
-            issues={this.state.issues}
-            currentIssues={this.state.currentIssues}
+            clicked={this.handleIssueClicked}
+            issues={issues}
+            currentIssue={currentIssue}
           />
         </div>
       );
 
     const exceptionMarkup = 
-      exceptionData.length === 0? null : (
+      exceptionData.length === 0 ? null : (
         <div className="exception">
           <p className="exceptionHeader">Exception: </p>
-          <ExceptionContainer 
+          <ExceptionContainer
             // sourceCode={sourceCode}
             exceptionData={exceptionData} 
-            click={this.handleFileChanged}
+            onClick={this.handleFileChanged}
             currentFile={currentFile}
             currentCodeLine={currentCodeLine}
             secondFile={secondFile}
@@ -79,17 +87,16 @@ class App extends React.Component {
         </div>
       );
 
-     const codelines = 
+     const sourceCodeMarkup = 
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
           <p className="sourceCodeHeader">Source Code: </p>
-          <SourceCodeContainer 
+          <SourceCodeContainer
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
-            secondFile={secondFile}
-            codeLine={currentCodeLine}
-            secondCodeLine={secondCodeLine}/>
+            targetLineNumber={currentCodeLine}
+          />
         </div>
       );
 
@@ -97,14 +104,12 @@ class App extends React.Component {
       <div className="app">
         <div className="header">Working title</div>
         <div className="container">
-          <div className="issueCntainer">
-          {issuesMarkup}
-          </div>
+          <div className="issueContainer">{issuesMarkup}</div>
           <div className="callPath">
             {exceptionMarkup}
             {logMarkup}
           </div>
-          <div className="sourceCode">{codelines}</div>
+          <div className="sourceCode">{sourceCodeMarkup}</div>
         </div>
       </div>
     );
@@ -115,20 +120,16 @@ class App extends React.Component {
   }
 
   handleFileChanged(fileName, lineNumber) {
-    console.log("App.js file name is: " + fileName.toString());
-    console.log("App.js current file set?")
-    if (this.state.currentFile === '') {
-      this.setState({
-        currentFile: fileName,
-        currentCodeLine: lineNumber, 
-      });
-    }
-    else if (this.state.secondFile === '') {
-      this.setState({
-        secondFile: fileName,
-        secondCodeLine: lineNumber
-      });
-    }
+    this.setState({
+      currentFile: fileName,
+      currentCodeLine: lineNumber,
+    });
+    // else if (this.state.secondFile === '') {
+    //   this.setState({
+    //     secondFile: fileName,
+    //     secondCodeLine: lineNumber
+    //   });
+    //}
   }
 
   getLinesToHighlight() {
@@ -141,6 +142,7 @@ class App extends React.Component {
         })
       })
     }
+
     let logLineNumbers = [];
     if (logData.length !== 0) {
       logData.forEach(log => {
@@ -149,17 +151,25 @@ class App extends React.Component {
         })
       });
     }
-    const lineNumbers = exceptionLineNumbers.concat(logLineNumbers);
-    this.setState({ linesToHighlight: lineNumbers });
+
+    return [...exceptionLineNumbers, ...logLineNumbers];
   }
 
-  handleTitleClicked(title) {
-    this.setState({ 
-      currentIssues: title,
-    }, this.fetchDocument);
+  async handleIssueClicked(issueTitle) {
+    const {exception, log, sourceCode} = await this.fetchDocument(issueTitle);
+    const linesToHighlight = this.getLinesToHighlight();
+
+    this.setState({
+      currentIssue: issueTitle,
+      currentFile: '',
+      exceptionData: exception,
+      logData: log,
+      sourceCode,
+      linesToHighlight,
+    });
   }
 
-  fetchIssues = async () => {
+  async fetchIssues() {
     try {
       const data = await fetch("/hello");
       return data.json();
@@ -168,21 +178,16 @@ class App extends React.Component {
     }
   };
 
-  fetchDocument = async () => {
+  async fetchDocument(issueTitle) {
     try {
       const data = await fetch("/callpath", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post: this.state.currentIssues })
+        body: JSON.stringify({ post: issueTitle })
       });
       const body = await data.text();
-      const bodyParsed = JSON.parse(body);
-      this.setState({
-        exceptionData: bodyParsed.exception,
-        logData: bodyParsed.log,
-        sourceCode: bodyParsed.sourceCode
-      });
-      this.getLinesToHighlight();
+      console.log('[App.js] body', JSON.parse(body));
+      return JSON.parse(body);
     } catch (error) {
       console.log("error", error);
     }

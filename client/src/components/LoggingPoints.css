@@ -1,0 +1,24 @@
+.LoggingPoint {
+  border-top: 1px solid #999;
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  background-color: white;
+  margin: 0 20px 0 20px;
+  padding: 10px 20px;
+  line-height: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  display: block;
+}
+
+.LoggingPoint:hover {
+  background: rgb(233, 233, 233);
+}
+
+.LoggingPoint--active {
+  font-weight: bold;
+}
+
+.fileName {
+  margin-right: 15px;
+}

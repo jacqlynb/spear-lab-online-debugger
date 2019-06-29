@@ -1,109 +1,92 @@
-import React from 'react';
-import './SourceCodeContainer.css';
-import { Link, Element, Events, animateScroll as scroll, scroller } from 'react-scroll'
+import React from "react";
+import { Element, Events } from "react-scroll";
+import { Tab, Tabs, TabList } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import CodeLine from "./CodeLine";
+import "./SourceCodeContainer.css";
 
-class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.scrollToTop = this.scrollToTop.bind(this);
-  }
-
+class SourceCodeContainer extends React.PureComponent {
   componentDidMount() {
-    Events.scrollEvent.register('begin', () => {
+    Events.scrollEvent.register("begin", () => {
       console.log("begin", arguments);
     });
-    Events.scrollEvent.register('end', () => {
+    Events.scrollEvent.register("end", () => {
       console.log("end", arguments);
     });
   }
 
-  scrollToTop() {
-    scroll.scrollToTop();
-  }
-  
-  scrollToWithContainer() {
-    let goToContainer = new Promise((resolve, reject) => {
-
-      Events.scrollEvent.register('end', () => {
-        resolve();
-        Events.scrollEvent.remove('end');
-      });
-
-      scroller.scrollTo('scroll-container', {
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart'
-      });
-    });
-
-    goToContainer.then(() =>
-      scroller.scrollTo('scroll-container-second-element', {
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart',
-        containerId: 'scroll-container'
-      })
-    );
-  }
-
   componentWillUnmount() {
-    Events.scrollEvent.remove('begin');
-    Events.scrollEvent.remove('end');
+    Events.scrollEvent.remove("begin");
+    Events.scrollEvent.remove("end");
   }
 
   render() {
+    console.log('RENDERED SourceCodeContainer')
 
-    const containerElements = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
-
-    const containerLinksMarkup = containerElements.map(elem => {
-      return (
-        <Link 
-          activeClass="active" 
-          to={elem} 
-          spy={true} 
-          smooth={true} 
-          duration={250} 
-          containerId="containerElement" 
-          style={{ display: 'inline-block', margin: '20px' }}>
-          Go to {elem}
-        </Link>
-      );
+    const { sourceCode, linesToHighlight, file, targetLineNumber } = this.props;
+    const sourceCodeToRender = sourceCode.filter(elem => {
+      if (elem.fileName === file) {
+        console.log("[SourceCodeContainer.js] sourceCode elem", elem);
+        return elem;
+      }
     });
 
-    const containerElementsMarkup = containerElements.map(elem => {
-      return (
-        <Element name={elem} style={{marginBottom: '200px'}}>{elem} in container</Element>
-      )
-    })
+    console.log(
+      "[SourceCodeContainer.js] sourceCodeToRender",
+      sourceCodeToRender
+    );
+
+    // if call path element selected
+    const codeLinesMarkup = file
+      ? sourceCodeToRender.map(elem => {
+          return elem.codeLines.map(line => (
+            <Element name={`${line.lineNumber}`}>
+              <CodeLine
+                code={line}
+                linesToHighlight={linesToHighlight}
+                targetLineNumber={targetLineNumber}
+              />
+            </Element>
+          ));
+        })
+      : null;
+
+    //console.log('[SourceCodeContainer.js] sourceCode: ', sourceCode);
+    const tabsMarkup = file ? (
+      <div className="tabHeader">
+        <Tabs>
+          <TabList>
+            <Tab>{file}</Tab>
+          </TabList>
+        </Tabs>
+      </div>
+    ) : null;
+
+    const elementStyle = file
+      ? {
+          position: "relative",
+          height: "500px",
+          overflow: "auto",
+          marginBottom: "100px"
+        }
+      : null;
+
+    const elementClassName = file ? "element" : null;
 
     return (
       <div>
-          <nav className="navbar navbar-default navbar-fixed-top">
-            <div className="container-fluid">
-              <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul className="nav navbar-nav">
-                </ul>
-              </div>
-            </div>
-          </nav>
-          {containerLinksMarkup}
-          <Element 
-            name="test7" 
-            className="element" 
-            id="containerElement" 
-            style={{
-              position: 'relative',
-              height: '200px',
-              overflow: 'scroll',
-              marginBottom: '100px'
-            }}>
-            {containerElementsMarkup}
-          </Element>
+        {tabsMarkup}
+        <Element
+          // name="test7"
+          className={elementClassName}
+          id="containerElement"
+          style={elementStyle}
+        >
+          {codeLinesMarkup}
+        </Element>
       </div>
     );
   }
-};
+}
 
-export default App;
-
+export default SourceCodeContainer;

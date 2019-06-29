@@ -1,35 +1,29 @@
-import React from 'react';
-import Callpath from './Callpath.js';
+import React from "react";
+import Callpath from "./Callpath.js";
 
-class ExceptionContainer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+// TODO: convert this to a function component
+class ExceptionContainer extends React.PureComponent {
   render() {
-      const callPathElements = this.props.exceptionData.map((callPath, index) => {
-        let callPathElement;
-        if (callPath) {
-          callPathElement = callPath;
-        } else {
-          callPathElement = null;
-        }
-    
-        return (
-          <Callpath 
-            clicked={this.props.click}
-            callPathElement={callPathElement}
-            currentFile={this.props.currentFile}
-            currentCodeLine={this.props.currentCodeLine}
-            secondFile={this.props.secondFile}
-            secondCodeLine={this.propssecondCodeLine}
-            key={index}
-            click={this.props.click}
-          />
-        )
-      });
-    
-    return callPathElements;
+    const {
+      onClick,
+      exceptionData,
+      currentCodeLine,
+      currentFile,
+      secondCodeLine,
+      secondFile
+    } = this.props;
+
+    return exceptionData.map((callPathElement, index) => (
+      <Callpath
+        key={index}
+        callPathElement={callPathElement}
+        currentFile={currentFile}
+        currentCodeLine={currentCodeLine}
+        secondFile={secondFile}
+        secondCodeLine={secondCodeLine}
+        onClick={onClick}
+      />
+    ));
   }
 }
 

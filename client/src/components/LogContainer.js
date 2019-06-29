@@ -1,13 +1,14 @@
 import React from 'react';
-import LoggingPoint from './LoggingPoint.js';
+import LoggingPoints from './LoggingPoints';
 import './LogContainer.css';
 
+// TODO: use regular named function
 const logContainer = (props) => {
   const logElements = props.logData.map((element, index) => {
     return (
       <div className="LogContainer">
         <p className="logContainer-header">Path:</p>
-        <LoggingPoint 
+        <LoggingPoints 
           loggingPointData={element}
           key={index}
         />
