@@ -10,16 +10,13 @@ function LoggingPoints(props) {
   const {
     loggingPointData,
     currentFile,
-    currentCodeLine,
-    secondFile,
-    secondCodeLine,
+    // currentCodeLine,
     onClick
   } = props;
 
   return loggingPointData.map((element, index) => {
-    const isActive = (element.fileName === currentFile &&
-      element.lineNumber === currentCodeLine) ||
-    (element.fileName === secondFile && element.lineNumber === secondCodeLine);
+    const isActive = (element.fileName === currentFile.fileName &&
+      element.lineNumber === currentFile.lineNumber)
 
     // consider using the `classNames` function from react-classnames to add multiple
     // you could do something like `className={classNames(shouldHighlight && highlightedClass, fileNameClass)}`

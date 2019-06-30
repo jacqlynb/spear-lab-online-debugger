@@ -23,7 +23,14 @@ class SourceCodeContainer extends React.PureComponent {
   render() {
     console.log('RENDERED SourceCodeContainer')
 
-    const { sourceCode, linesToHighlight, file, targetLineNumber } = this.props;
+    const { 
+      sourceCode, 
+      linesToHighlight, 
+      file, 
+      // targetLineNumber, 
+      allSelectedFiles
+    } = this.props;
+
     const sourceCodeToRender = sourceCode.filter(elem => {
       if (elem.fileName === file) {
         console.log("[SourceCodeContainer.js] sourceCode elem", elem);
@@ -31,10 +38,10 @@ class SourceCodeContainer extends React.PureComponent {
       }
     });
 
-    console.log(
-      "[SourceCodeContainer.js] sourceCodeToRender",
-      sourceCodeToRender
-    );
+    // console.log(
+    //   "[SourceCodeContainer.js] sourceCodeToRender",
+    //   sourceCodeToRender
+    // );
 
     // if call path element selected
     const codeLinesMarkup = file
@@ -44,19 +51,30 @@ class SourceCodeContainer extends React.PureComponent {
               <CodeLine
                 code={line}
                 linesToHighlight={linesToHighlight}
-                targetLineNumber={targetLineNumber}
+                file={file}
+                // targetLineNumber={targetLineNumber}
               />
             </Element>
           ));
         })
       : null;
 
+    console.log('[SourceCodeContainer.js] current file: ', file);
+
+    let selected;
+    const tabsList = allSelectedFiles 
+      ? allSelectedFiles.map((elem, index) => {
+          selected = (elem === file) ? index : null;
+          return <Tab key={elem.fileName}>{elem.fileName}<button className="tabExitButton">x</button></Tab>
+        })
+      : null;
+
     //console.log('[SourceCodeContainer.js] sourceCode: ', sourceCode);
     const tabsMarkup = file ? (
       <div className="tabHeader">
-        <Tabs>
+        <Tabs selectedIndex={selected}>
           <TabList>
-            <Tab>{file}</Tab>
+            {tabsList}
           </TabList>
         </Tabs>
       </div>

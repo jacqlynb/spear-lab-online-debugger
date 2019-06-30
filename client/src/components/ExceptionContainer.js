@@ -7,10 +7,8 @@ class ExceptionContainer extends React.PureComponent {
     const {
       onClick,
       exceptionData,
-      currentCodeLine,
+      // currentCodeLine,
       currentFile,
-      secondCodeLine,
-      secondFile
     } = this.props;
 
     return exceptionData.map((callPathElement, index) => (
@@ -18,9 +16,7 @@ class ExceptionContainer extends React.PureComponent {
         key={index}
         callPathElement={callPathElement}
         currentFile={currentFile}
-        currentCodeLine={currentCodeLine}
-        secondFile={secondFile}
-        secondCodeLine={secondCodeLine}
+        // currentCodeLine={currentCodeLine}
         onClick={onClick}
       />
     ));

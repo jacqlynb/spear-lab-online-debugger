@@ -10,9 +10,9 @@
 .tabHeader {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
+  font-size: 14px;
   margin: 0px 15px 0px 15px;
   border-bottom: 1px solid white;
-
 }
 
 #example {
@@ -63,4 +63,17 @@
 
 .big {
   height: 1000px !important;
+}
+
+.tabExitButton {
+  margin-left: 6px;
+  padding: 0 4px;
+  background-color: lightgray;
+  border-radius: 10px;
+  height: 15px;
+  width: 15px;
+  font-size: 10px;
+  text-align: center;
+  /* line-height: 1; */
+
 }

@@ -10,9 +10,7 @@ class Callpath extends React.Component {
       log,
       onClick,
       currentFile,
-      currentCodeLine,
-      secondFile,
-      secondCodeLine
+      // currentCodeLine,
     } = this.props;
 
     return (
@@ -23,9 +21,7 @@ class Callpath extends React.Component {
           log={log}
           onClick={onClick}
           currentFile={currentFile}
-          currentCodeLine={currentCodeLine}
-          secondFile={secondFile}
-          secondCodeLine={secondCodeLine}
+          // currentCodeLine={currentCodeLine}
         />
       </div>
     );

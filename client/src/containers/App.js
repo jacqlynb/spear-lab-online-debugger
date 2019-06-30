@@ -14,6 +14,8 @@ class App extends React.PureComponent {
     this.handleIssueClicked = this.handleIssueClicked.bind(this);
   }
 
+  // make a files array that contains file object: filename + targetline
+
   state = {
     exceptionData: [],
     logData: [],
@@ -21,10 +23,16 @@ class App extends React.PureComponent {
     linesToHighlight: [],
     issues: [],
     currentIssue: null,
-    currentFile: '',
-    secondFile: '',
-    currentCodeLine: null,
-    secondCodeLine: null,
+    currentFile: {
+      lineNumber: null,
+      fileName: null,
+    },
+    allSelectedFiles: [{
+      lineNumber: null,
+      fileName: null
+    }],
+    sourceCodeTabs: [],
+    // currentCodeLine: null,
     currentLoggingPoint: ''
   };
 
@@ -44,8 +52,9 @@ class App extends React.PureComponent {
       logData,
       sourceCode,
       linesToHighlight,
-      currentCodeLine,
+      // currentCodeLine,
       currentFile,
+      allSelectedFiles,
       secondFile,
       secondCodeLine,
     } = this.state;
@@ -72,9 +81,7 @@ class App extends React.PureComponent {
             exceptionData={exceptionData} 
             onClick={this.handleFileChanged}
             currentFile={currentFile}
-            currentCodeLine={currentCodeLine}
-            secondFile={secondFile}
-            secondCodeLine={secondCodeLine}
+            // currentCodeLine={currentCodeLine}
           />
         </div>
       );
@@ -95,7 +102,8 @@ class App extends React.PureComponent {
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
-            targetLineNumber={currentCodeLine}
+            // targetLineNumber={currentCodeLine}
+            allSelectedFiles={allSelectedFiles}
           />
         </div>
       );
@@ -120,16 +128,17 @@ class App extends React.PureComponent {
   }
 
   handleFileChanged(fileName, lineNumber) {
+    const files = [...this.state.allSelectedFiles];
+
+    if (!files.includes(fileName)) {
+      files.push({ fileName, lineNumber });
+    }
+
     this.setState({
       currentFile: fileName,
       currentCodeLine: lineNumber,
+      allSelectedFiles: files
     });
-    // else if (this.state.secondFile === '') {
-    //   this.setState({
-    //     secondFile: fileName,
-    //     secondCodeLine: lineNumber
-    //   });
-    //}
   }
 
   getLinesToHighlight() {
@@ -162,6 +171,7 @@ class App extends React.PureComponent {
     this.setState({
       currentIssue: issueTitle,
       currentFile: '',
+      allSelectedFiles: [],
       exceptionData: exception,
       logData: log,
       sourceCode,

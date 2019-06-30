@@ -2,13 +2,13 @@ import React from 'react';
 import './CodeLine.css';
 
 const codeline = (props) => {
-  const { code, linesToHighlight, targetLineNumber } = props;
+  const { code, linesToHighlight, file /*targetLineNumber*/ } = props;
   // console.log('[CodeLine.js] filename ', code.fileName)
 
   let highlight;
 
   const line = code;
-  if (line.lineNumber === targetLineNumber) {
+  if (line.lineNumber === file.lineNumber) {
     highlight = 'targetLine'
   } else if (linesToHighlight.includes(line.lineNumber)) {
     highlight = 'highlight'
