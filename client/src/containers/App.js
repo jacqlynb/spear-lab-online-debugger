@@ -10,8 +10,9 @@ import './App.css';
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.handleFileChanged = this.handleFileChanged.bind(this);
     this.handleIssueClicked = this.handleIssueClicked.bind(this);
+    this.handleFileChanged = this.handleFileChanged.bind(this);
+    this.handleChangeTab = this.handleChangeTab.bind(this);
   }
 
   // make a files array that contains file object: filename + targetline
@@ -31,8 +32,7 @@ class App extends React.PureComponent {
       lineNumber: null,
       fileName: null
     }],
-    sourceCodeTabs: [],
-    // currentCodeLine: null,
+    sourceCodeTabIndex: 0,
     currentLoggingPoint: ''
   };
 
@@ -52,11 +52,9 @@ class App extends React.PureComponent {
       logData,
       sourceCode,
       linesToHighlight,
-      // currentCodeLine,
       currentFile,
       allSelectedFiles,
-      secondFile,
-      secondCodeLine,
+      sourceCodeTabIndex
     } = this.state;
 
     const issuesMarkup =
@@ -81,7 +79,6 @@ class App extends React.PureComponent {
             exceptionData={exceptionData} 
             onClick={this.handleFileChanged}
             currentFile={currentFile}
-            // currentCodeLine={currentCodeLine}
           />
         </div>
       );
@@ -99,11 +96,12 @@ class App extends React.PureComponent {
         <div className="sourceCode">
           <p className="sourceCodeHeader">Source Code: </p>
           <SourceCodeContainer
+            onClick={this.handleChangeTab}
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
-            // targetLineNumber={currentCodeLine}
             allSelectedFiles={allSelectedFiles}
+            tabIndex={sourceCodeTabIndex}
           />
         </div>
       );
@@ -128,16 +126,50 @@ class App extends React.PureComponent {
   }
 
   handleFileChanged(fileName, lineNumber) {
+    console.log('[App.js] handleFileChanged fileName', fileName);
+    
     const files = [...this.state.allSelectedFiles];
+    console.log('[App.js] handleFileChanged files', files);
 
-    if (!files.includes(fileName)) {
+    const duplicateFile = files.filter(file => {
+      if (file.fileName === fileName) {
+        return file;
+      }
+    })
+    
+    console.log('[App.js] handleFileChanged duplicateFile', duplicateFile);
+
+
+    let tabIndex;
+
+    // refactor later... a little confusing
+    if (duplicateFile.length === 0) {
       files.push({ fileName, lineNumber });
+      tabIndex = files.length - 1;
+    } else {
+      files.forEach((file, index) => {
+        if (file.fileName === fileName) {
+          tabIndex = index;
+        }
+      })
     }
 
+    console.log('[App.js] handleFileChanged tabIndex: ', tabIndex);
+
     this.setState({
-      currentFile: fileName,
-      currentCodeLine: lineNumber,
-      allSelectedFiles: files
+      currentFile: { fileName, lineNumber },
+      allSelectedFiles: files,
+      sourceCodeTabIndex: tabIndex
+    });
+  }
+
+  handleChangeTab(tabIndex) {
+    const files = [...this.state.allSelectedFiles];
+    const fileToSet = files.find((_, index) => index === tabIndex);
+
+    this.setState({ 
+      sourceCodeTabIndex: tabIndex, 
+      currentFile: fileToSet
     });
   }
 

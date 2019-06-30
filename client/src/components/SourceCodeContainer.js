@@ -21,27 +21,23 @@ class SourceCodeContainer extends React.PureComponent {
   }
 
   render() {
-    console.log('RENDERED SourceCodeContainer')
+    console.log('RENDERED SourceCodeContainer');
 
     const { 
+      onClick,
       sourceCode, 
       linesToHighlight, 
       file, 
-      // targetLineNumber, 
-      allSelectedFiles
+      allSelectedFiles,
+      tabIndex
     } = this.props;
 
     const sourceCodeToRender = sourceCode.filter(elem => {
-      if (elem.fileName === file) {
+      if (elem.fileName === file.fileName) {
         console.log("[SourceCodeContainer.js] sourceCode elem", elem);
         return elem;
       }
     });
-
-    // console.log(
-    //   "[SourceCodeContainer.js] sourceCodeToRender",
-    //   sourceCodeToRender
-    // );
 
     // if call path element selected
     const codeLinesMarkup = file
@@ -52,19 +48,17 @@ class SourceCodeContainer extends React.PureComponent {
                 code={line}
                 linesToHighlight={linesToHighlight}
                 file={file}
-                // targetLineNumber={targetLineNumber}
               />
             </Element>
           ));
         })
       : null;
 
-    console.log('[SourceCodeContainer.js] current file: ', file);
+    console.log('[SourceCodeContainer.js] tabIndex: ', tabIndex);
 
-    let selected;
     const tabsList = allSelectedFiles 
       ? allSelectedFiles.map((elem, index) => {
-          selected = (elem === file) ? index : null;
+          console.log('[SourceCodeContainer.js] elem.fileName: ' + elem.fileName + ' currentfile.fileName ' + file.fileName);
           return <Tab key={elem.fileName}>{elem.fileName}<button className="tabExitButton">x</button></Tab>
         })
       : null;
@@ -72,7 +66,7 @@ class SourceCodeContainer extends React.PureComponent {
     //console.log('[SourceCodeContainer.js] sourceCode: ', sourceCode);
     const tabsMarkup = file ? (
       <div className="tabHeader">
-        <Tabs selectedIndex={selected}>
+        <Tabs selectedIndex={tabIndex} onSelect={tabIndex => onClick(tabIndex)}>
           <TabList>
             {tabsList}
           </TabList>

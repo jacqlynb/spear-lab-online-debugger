@@ -2,7 +2,7 @@ import React from 'react';
 import './CodeLine.css';
 
 const codeline = (props) => {
-  const { code, linesToHighlight, file /*targetLineNumber*/ } = props;
+  const { code, linesToHighlight, file } = props;
   // console.log('[CodeLine.js] filename ', code.fileName)
 
   let highlight;
