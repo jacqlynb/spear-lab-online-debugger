@@ -1,5 +1,5 @@
 import React from "react";
-import Autosuggest from "react-autosuggest";
+// import Autosuggest from "react-autosuggest";
 import "./Issues.css";
 
 // TODO: convert to function component?

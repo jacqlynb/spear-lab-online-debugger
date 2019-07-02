@@ -13,6 +13,7 @@ class App extends React.PureComponent {
     this.handleIssueClicked = this.handleIssueClicked.bind(this);
     this.handleFileChanged = this.handleFileChanged.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
+    this.handleTabExitButtonClicked = this.handleTabExitButtonClicked.bind(this);
   }
 
   // make a files array that contains file object: filename + targetline
@@ -33,7 +34,7 @@ class App extends React.PureComponent {
       fileName: null
     }],
     sourceCodeTabIndex: 0,
-    currentLoggingPoint: ''
+    currentLoggingPoint: '',
   };
 
   componentDidMount() {
@@ -75,9 +76,8 @@ class App extends React.PureComponent {
         <div className="exception">
           <p className="exceptionHeader">Exception: </p>
           <ExceptionContainer
-            // sourceCode={sourceCode}
-            exceptionData={exceptionData} 
             onClick={this.handleFileChanged}
+            exceptionData={exceptionData} 
             currentFile={currentFile}
           />
         </div>
@@ -90,13 +90,15 @@ class App extends React.PureComponent {
           <LogContainer logData={logData} />
         </div>
       );
-
-     const sourceCodeMarkup = 
+    
+    const sourceCodeMarkup = 
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
           <p className="sourceCodeHeader">Source Code: </p>
           <SourceCodeContainer
             onClick={this.handleChangeTab}
+            onTabClick={this.handleFileChanged}
+            onExitButtonClick={this.handleTabExitButtonClicked}
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
@@ -126,19 +128,16 @@ class App extends React.PureComponent {
   }
 
   handleFileChanged(fileName, lineNumber) {
-    console.log('[App.js] handleFileChanged fileName', fileName);
-    
+    console.log('[App.js] handleFileChanged');
     const files = [...this.state.allSelectedFiles];
-    console.log('[App.js] handleFileChanged files', files);
 
     const duplicateFile = files.filter(file => {
       if (file.fileName === fileName) {
         return file;
+      } else {
+        return null;
       }
     })
-    
-    console.log('[App.js] handleFileChanged duplicateFile', duplicateFile);
-
 
     let tabIndex;
 
@@ -154,18 +153,19 @@ class App extends React.PureComponent {
       })
     }
 
-    console.log('[App.js] handleFileChanged tabIndex: ', tabIndex);
-
     this.setState({
       currentFile: { fileName, lineNumber },
       allSelectedFiles: files,
       sourceCodeTabIndex: tabIndex
     });
+    return;
   }
 
   handleChangeTab(tabIndex) {
     const files = [...this.state.allSelectedFiles];
+    console.log('[App.js] handleChangeTab', files);
     const fileToSet = files.find((_, index) => index === tabIndex);
+    console.log('[App.js] handleChangeTab fileToSet', fileToSet);
 
     this.setState({ 
       sourceCodeTabIndex: tabIndex, 
@@ -195,6 +195,39 @@ class App extends React.PureComponent {
 
     return [...exceptionLineNumbers, ...logLineNumbers];
   }
+
+  handleTabExitButtonClicked(fileToRemove) {
+    console.log('[App.js] handleTabExit fileToRemove: ', fileToRemove);
+    const files = [...this.state.allSelectedFiles];
+
+    const filesUpdated = files.filter(file => {
+      console.log('[App.js] file.fileName', file.fileName)
+      if (file.fileName !== fileToRemove) {
+        return file;
+      } else {
+        return null;
+      }
+    });
+
+    console.log('[App.js] handleTabExitButtonClicked filesUpdated.length: ', filesUpdated.length);
+    const tabIndex = (this.state.sourceCodeTabIndex <= filesUpdated.length - 1) 
+      ? this.state.sourceCodeTabIndex 
+      : filesUpdated.length - 1;
+    
+      console.log(this.state.sourceCodeTabIndex <= filesUpdated.length - 1) 
+      console.log('[App.js] handleTabExitButtonClicked this.state.tabIndex: ', this.state.sourceCodeTabIndex);
+      console.log('[App.js] handleTabExitButtonClicked tabIndex: ', tabIndex);
+
+    this.setState({
+      allSelectedFiles: filesUpdated,
+      sourceCodeTabIndex: tabIndex
+    });
+  }
+
+  // setDummy() {
+  //   const currentFile = this.state.currentFile;
+  //   this.setState(dummy: currentFile);
+  // }
 
   async handleIssueClicked(issueTitle) {
     const {exception, log, sourceCode} = await this.fetchDocument(issueTitle);
@@ -228,7 +261,7 @@ class App extends React.PureComponent {
         body: JSON.stringify({ post: issueTitle })
       });
       const body = await data.text();
-      console.log('[App.js] body', JSON.parse(body));
+      // console.log('[App.js] body', JSON.parse(body));
       return JSON.parse(body);
     } catch (error) {
       console.log("error", error);

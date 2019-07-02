@@ -10,8 +10,7 @@ function LoggingPoints(props) {
   const {
     loggingPointData,
     currentFile,
-    // currentCodeLine,
-    onClick
+    onClick, 
   } = props;
 
   return loggingPointData.map((element, index) => {
@@ -33,21 +32,21 @@ function LoggingPoints(props) {
     // (see https://github.com/fisshy/react-scroll)
     //
     // Create a `<LoggingPointLink />` component or something, that will let you have a custom click handler.
-    return (
-      <Link
-        key={index}
-        smooth={true}
-        duration={SCROLL_DURATION}
-        containerId="containerElement"
-        className={`LoggingPoint ${isActive ? 'LoggingPoint--active' : ''}`}
-        to={`${element.lineNumber}`}
-        offset={SCROLL_OFFSET_PX}
-        onClick={() => onClick(element.fileName, element.lineNumber)}
-      >
-        <span className="fileName">{element.fileName}:{element.lineNumber}</span>
-        <span>{element.methodName} </span>
-      </Link>
-    );
+      return (
+        <Link
+          key={index}
+          smooth={true}
+          duration={SCROLL_DURATION}
+          containerId="containerElement"
+          className={`LoggingPoint ${isActive ? 'LoggingPoint--active' : ''}`}
+          to={`${element.lineNumber}`}
+          offset={SCROLL_OFFSET_PX}
+          onClick={() => onClick(element.fileName, element.lineNumber)}
+        >
+          <span className="fileName">{element.fileName}:{element.lineNumber}</span>
+          <span>{element.methodName} </span>
+        </Link>
+      );
   });
 }
 

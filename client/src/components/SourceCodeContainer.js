@@ -1,11 +1,21 @@
 import React from "react";
-import { Element, Events } from "react-scroll";
-import { Tab, Tabs, TabList } from "react-tabs";
+import { Element, Events, animateScroll, scroller } from "react-scroll";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+// import { Link } from "react-scroll";
+
 import CodeLine from "./CodeLine";
 import "./SourceCodeContainer.css";
 
+// const SCROLL_OFFSET_PX = -80;
+const SCROLL_DURATION = 250;
+
 class SourceCodeContainer extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.scrollToCurrentLine = this.scrollToCurrentLine.bind(this);
+  }
+
   componentDidMount() {
     Events.scrollEvent.register("begin", () => {
       console.log("begin", arguments);
@@ -15,9 +25,26 @@ class SourceCodeContainer extends React.PureComponent {
     });
   }
 
+  componentDidUpdate() {
+    console.log('[SourceCodeContainer.js] componentDidUpdate')
+    this.scrollToCurrentLine();
+  }
+
   componentWillUnmount() {
     Events.scrollEvent.remove("begin");
     Events.scrollEvent.remove("end");
+  }
+
+  scrollToCurrentLine() {
+    console.log('[SourceCodeContainer.js] currentLine: ', this.props.file.lineNumber);
+    console.log('[SourceCodeContainer.js] scrollTo()');
+
+    scroller.scrollTo((this.props.file.lineNumber -8).toString(), {
+      smooth: true,
+      duration:  SCROLL_DURATION,
+      containerId: "containerElement",
+      to: this.props.file.lineNumber
+    });
   }
 
   render() {
@@ -25,6 +52,7 @@ class SourceCodeContainer extends React.PureComponent {
 
     const { 
       onClick,
+      onExitButtonClick,
       sourceCode, 
       linesToHighlight, 
       file, 
@@ -36,6 +64,8 @@ class SourceCodeContainer extends React.PureComponent {
       if (elem.fileName === file.fileName) {
         console.log("[SourceCodeContainer.js] sourceCode elem", elem);
         return elem;
+      } else {
+        return null;
       }
     });
 
@@ -43,7 +73,7 @@ class SourceCodeContainer extends React.PureComponent {
     const codeLinesMarkup = file
       ? sourceCodeToRender.map(elem => {
           return elem.codeLines.map(line => (
-            <Element name={`${line.lineNumber}`}>
+            <Element name={`${line.lineNumber}`} key={line.lineNumber}>
               <CodeLine
                 code={line}
                 linesToHighlight={linesToHighlight}
@@ -54,15 +84,29 @@ class SourceCodeContainer extends React.PureComponent {
         })
       : null;
 
-    console.log('[SourceCodeContainer.js] tabIndex: ', tabIndex);
+    // console.log('[SourceCodeContainer.js] tabIndex: ', tabIndex);
 
     const tabsList = allSelectedFiles 
       ? allSelectedFiles.map((elem, index) => {
-          console.log('[SourceCodeContainer.js] elem.fileName: ' + elem.fileName + ' currentfile.fileName ' + file.fileName);
-          return <Tab key={elem.fileName}>{elem.fileName}<button className="tabExitButton">x</button></Tab>
+        let currentFileName = elem.fileName;
+        // console.log('[SourceCodeContainer.js] currentFileName for onExitButtonClick', currentFileName)
+          return (
+            <Tab key={elem.fileName}>
+              {elem.fileName}
+              <button className="tabExitButton" onClick={() => onExitButtonClick(currentFileName)}>x</button>
+            </Tab>
+          )
         })
       : null;
 
+    const tabPanelsList = allSelectedFiles 
+      ? allSelectedFiles.map(elem => {
+          return (
+            <TabPanel key={elem}></TabPanel>
+          )
+        })
+      : null;
+      
     //console.log('[SourceCodeContainer.js] sourceCode: ', sourceCode);
     const tabsMarkup = file ? (
       <div className="tabHeader">
@@ -70,6 +114,7 @@ class SourceCodeContainer extends React.PureComponent {
           <TabList>
             {tabsList}
           </TabList>
+          {tabPanelsList}
         </Tabs>
       </div>
     ) : null;

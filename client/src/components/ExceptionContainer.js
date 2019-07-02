@@ -7,7 +7,6 @@ class ExceptionContainer extends React.PureComponent {
     const {
       onClick,
       exceptionData,
-      // currentCodeLine,
       currentFile,
     } = this.props;
 
@@ -16,7 +15,6 @@ class ExceptionContainer extends React.PureComponent {
         key={index}
         callPathElement={callPathElement}
         currentFile={currentFile}
-        // currentCodeLine={currentCodeLine}
         onClick={onClick}
       />
     ));
