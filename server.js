@@ -25,14 +25,14 @@ app.get('/hello', (req, res) => {
   });
 });
 
-app.post('/callpath', (req, res) => {
-  console.log(req.body);
-  Exception.findOne({ title: req.body.post }).then(data => {
-    console.log(data.sourceCode);
+app.get('/issues/:title', (req, res) => {
+  console.log(req.params);
+  Exception.findOne({ title: req.params.title }).then(data => {
+    console.log(data);
     res.status(200).send(data);
   }).catch(error => {
     res.status(404).send(error);
-  })
+  }); 
 })
 
 app.listen(port, () => console.log(`Listening on ${port}`));

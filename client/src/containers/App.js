@@ -255,10 +255,10 @@ class App extends React.PureComponent {
 
   async fetchDocument(issueTitle) {
     try {
-      const data = await fetch("/callpath", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post: issueTitle })
+      const data = await fetch("/issues/" + issueTitle, {
+        // method: "GET",
+        // headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify({ post: issueTitle })
       });
       const body = await data.text();
       // console.log('[App.js] body', JSON.parse(body));
