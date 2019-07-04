@@ -27,8 +27,9 @@ class SourceCodeContainer extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    // console.log("[SourceCodeContainer.js] componentDidUpdate");
-    this.scrollToCurrentLine();
+    if (!this.props.gridView) {
+      this.scrollToCurrentLine();
+    }
   }
 
   componentWillUnmount() {
@@ -128,6 +129,7 @@ class SourceCodeContainer extends React.PureComponent {
           });
           return (
             <SourceCodeGridElement
+              onClick={onExitButtonClick}
               file={file}
               sourceCode={sourceCodeElement}
               linesToHighlight={linesToHighlight}
@@ -168,28 +170,3 @@ class SourceCodeContainer extends React.PureComponent {
 
 export default SourceCodeContainer;
 
-/* gridMarkup overview:
-<div className= -------->"sourceCodeGrid">
-  <SourceCodeGridElement>
-    <Element
-      className=-------->"gridContainer"
-      id={"containerElement" + sourceCode.fileName}
-    >
-      <Element name={`${line.lineNumber}`} key={line.lineNumber}>
-        <CodeLine
-          code={line}
-          linesToHighlight={linesToHighlight}
-          file={file}
-        />
-        </Element>
-    </Element>
-  </SourceCodeGridElement>
-
-  .gridContainer {
-    position: "relative",
-    height: "500px",
-    overflow: "auto",
-    marginBottom: "100px"
-  }
-
-*/

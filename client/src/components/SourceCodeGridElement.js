@@ -24,8 +24,17 @@ class SourceCodeGridElement extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    this.scrollToTargetLine();
+  }
+
   render() {
-    const { file, sourceCode, linesToHighlight } = this.props;
+    const {
+      file,
+      sourceCode,
+      linesToHighlight,
+      onClick
+    } = this.props;
 
     const sourceCodeMarkup = sourceCode.codeLines.map(line => {
       return (
@@ -39,12 +48,19 @@ class SourceCodeGridElement extends React.Component {
       );
     });
 
-    console.log('[SourceCodeGridElement.js] RENDERING...', file.fileName);
+    console.log("[SourceCodeGridElement.js] RENDERING...", file.fileName);
 
     return (
       <div className="gridElement" key={sourceCode.fileName}>
         <div className="gridElementHeader">
-          {sourceCode.fileName}
+          <h4>{sourceCode.fileName}</h4>
+          <button
+            className="tabExitButton"
+            onClick={() => onClick(sourceCode.fileName)}
+          >
+            {" "}
+            x
+          </button>
         </div>
         <Element
           className="gridContainer"

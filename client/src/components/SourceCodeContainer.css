@@ -6,7 +6,6 @@
   background: lightgreen;
   overflow: auto;
   font-family: 'Courier New', Courier, monospace;
-
 }
 
 .tabHeader {
@@ -44,29 +43,40 @@
   width: 15px;
   font-size: 10px;
   text-align: center;
+  justify-self: center;
 }
 
 .sourceCodeGrid {
   display: grid;
   grid-template-columns: 50% 50%;
   grid-auto-rows: 280px;
-  border: 1px solid lightgray;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   font-size: 14px;
+  margin-left: 15px;
 }
 
 .gridElementHeader {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  background: rgb(182, 219, 230);
+  margin: 0 15px 0 0;
+  padding: 0 7px;
+}
+
+.gridElementHeader h4 {
   padding: 5px 0;
+  margin: 0;
 }
 
 .gridContainer {
   overflow: auto;
   position: relative;
   max-height: 250px;
-  margin-right: 20px;
-
-  background: rgb(218, 218, 218);
+  margin-right: 15px;
+  background: rgb(245, 245, 245);
 }
 
 

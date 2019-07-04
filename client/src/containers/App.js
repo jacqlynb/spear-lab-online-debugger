@@ -229,20 +229,13 @@ class App extends React.PureComponent {
     });
 
     console.log(
-      "[App.js] handleTabExitButtonClicked filesUpdated.length: ",
-      filesUpdated.length
+      "[App.js] handleTabExitButtonClicked filesUpdated ",
+      filesUpdated
     );
     const tabIndex =
       this.state.sourceCodeTabIndex <= filesUpdated.length - 1
         ? this.state.sourceCodeTabIndex
         : filesUpdated.length - 1;
-
-    console.log(this.state.sourceCodeTabIndex <= filesUpdated.length - 1);
-    console.log(
-      "[App.js] handleTabExitButtonClicked this.state.tabIndex: ",
-      this.state.sourceCodeTabIndex
-    );
-    console.log("[App.js] handleTabExitButtonClicked tabIndex: ", tabIndex);
 
     this.setState({
       allSelectedFiles: filesUpdated,
