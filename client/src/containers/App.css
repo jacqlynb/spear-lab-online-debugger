@@ -8,6 +8,7 @@
   padding: 5px;
   border-bottom: 1px solid rgb(169, 175, 180);
   box-shadow: 0 2px 3px rgb(116, 121, 124); 
+  z-index: 3;
 }
 
 .container {
@@ -36,31 +37,49 @@
 }
 
 .issues {
-  flex: 4;
+  width: 30px;
   padding-top: 40px;
   border-right: 1px solid #ddd;
-  /* box-shadow: 2px 0 3px rgb(161, 161, 161); */
 }
 
 .callPath {
   height: 100%;
   padding-top: 40px;
   overflow: auto;
-  flex: 11;
+  flex: 7;
   background: white;
   border-right: 1px solid #ddd;
   /* box-shadow: 2px 0 3px rgb(161, 161, 161); */
 }
 
 .sourceCode {
-  flex: 18;
+  flex: 20;
   padding-top: 20px;
   box-sizing: border-box;
   height: 100%;
   overflow: auto;
 }
 
-code {
+.code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.gridIcon {
+  height: 25px;
+  width: auto;
+  align-self: center;
+}
+
+.gridIcon:hover {
+  cursor: pointer;
+}
+
+.sourceCodeHeaderWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-right: 20px;
+}
+

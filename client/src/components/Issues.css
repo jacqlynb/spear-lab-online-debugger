@@ -1,6 +1,7 @@
 .Issue {
   border-bottom: 1px solid gray;
   margin: 15px 20px 15px 20px;
+  font-size: 14px;
 }
 
 .issueText {

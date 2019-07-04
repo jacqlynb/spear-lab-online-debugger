@@ -1,11 +1,11 @@
-import React from 'react';
-// import Autosuggest from 'react-autosuggest';
-import ExceptionContainer from '../components/ExceptionContainer';
-import LogContainer from '../components/LogContainer';
-import SourceCodeContainer from '../components/SourceCodeContainer';
-import Issues from '../components/Issues';
-// import TestSearch from '../components/TestSearch'
-import './App.css';
+import React from "react";
+import ExceptionContainer from "../components/ExceptionContainer";
+import LogContainer from "../components/LogContainer";
+import SourceCodeContainer from "../components/SourceCodeContainer";
+import Issues from "../components/Issues";
+import "./App.css";
+
+const gridIcon = require("../grid-icon.png");
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -13,10 +13,11 @@ class App extends React.PureComponent {
     this.handleIssueClicked = this.handleIssueClicked.bind(this);
     this.handleFileChanged = this.handleFileChanged.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
-    this.handleTabExitButtonClicked = this.handleTabExitButtonClicked.bind(this);
+    this.handleTabExitButtonClicked = this.handleTabExitButtonClicked.bind(
+      this
+    );
+    this.toggleGridView = this.toggleGridView.bind(this);
   }
-
-  // make a files array that contains file object: filename + targetline
 
   state = {
     exceptionData: [],
@@ -27,14 +28,17 @@ class App extends React.PureComponent {
     currentIssue: null,
     currentFile: {
       lineNumber: null,
-      fileName: null,
-    },
-    allSelectedFiles: [{
-      lineNumber: null,
       fileName: null
-    }],
+    },
+    allSelectedFiles: [
+      {
+        lineNumber: null,
+        fileName: null
+      }
+    ],
     sourceCodeTabIndex: 0,
-    currentLoggingPoint: '',
+    currentLoggingPoint: "",
+    gridView: false
   };
 
   componentDidMount() {
@@ -55,7 +59,8 @@ class App extends React.PureComponent {
       linesToHighlight,
       currentFile,
       allSelectedFiles,
-      sourceCodeTabIndex
+      sourceCodeTabIndex,
+      gridView
     } = this.state;
 
     const issuesMarkup =
@@ -71,30 +76,38 @@ class App extends React.PureComponent {
         </div>
       );
 
-    const exceptionMarkup = 
+    const exceptionMarkup =
       exceptionData.length === 0 ? null : (
         <div className="exception">
           <p className="exceptionHeader">Exception: </p>
           <ExceptionContainer
             onClick={this.handleFileChanged}
-            exceptionData={exceptionData} 
+            exceptionData={exceptionData}
             currentFile={currentFile}
           />
         </div>
       );
 
-    const logMarkup = 
+    const logMarkup =
       logData.length === 0 ? null : (
         <div className="log">
           <p className="exceptionHeader">Log: </p>
           <LogContainer logData={logData} />
         </div>
       );
-    
-    const sourceCodeMarkup = 
+
+    const sourceCodeMarkup =
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
-          <p className="sourceCodeHeader">Source Code: </p>
+          <div className="sourceCodeHeaderWrapper">
+            <p className="sourceCodeHeader">Source Code: </p>
+            <img
+              className="gridIcon"
+              onClick={this.toggleGridView}
+              src={gridIcon}
+              alt="Grid view icon"
+            />
+          </div>
           <SourceCodeContainer
             onClick={this.handleChangeTab}
             onTabClick={this.handleFileChanged}
@@ -104,6 +117,7 @@ class App extends React.PureComponent {
             file={currentFile}
             allSelectedFiles={allSelectedFiles}
             tabIndex={sourceCodeTabIndex}
+            gridView={gridView}
           />
         </div>
       );
@@ -127,8 +141,8 @@ class App extends React.PureComponent {
     console.log("show logging point App.js " + fileName + " " + lineNumber);
   }
 
+  // Change to handleFileChange
   handleFileChanged(fileName, lineNumber) {
-    console.log('[App.js] handleFileChanged');
     const files = [...this.state.allSelectedFiles];
 
     const duplicateFile = files.filter(file => {
@@ -137,25 +151,30 @@ class App extends React.PureComponent {
       } else {
         return null;
       }
-    })
+    });
 
     let tabIndex;
+    let filesUpdated;
 
     // refactor later... a little confusing
     if (duplicateFile.length === 0) {
       files.push({ fileName, lineNumber });
+      filesUpdated = files;
       tabIndex = files.length - 1;
     } else {
-      files.forEach((file, index) => {
+      filesUpdated = files.map((file, index) => {
+        let newFile = file;
         if (file.fileName === fileName) {
           tabIndex = index;
+          newFile.lineNumber = lineNumber
         }
-      })
+        return newFile;
+      });
     }
 
     this.setState({
       currentFile: { fileName, lineNumber },
-      allSelectedFiles: files,
+      allSelectedFiles: filesUpdated,
       sourceCodeTabIndex: tabIndex
     });
     return;
@@ -163,33 +182,33 @@ class App extends React.PureComponent {
 
   handleChangeTab(tabIndex) {
     const files = [...this.state.allSelectedFiles];
-    console.log('[App.js] handleChangeTab', files);
+    console.log("[App.js] handleChangeTab", files);
     const fileToSet = files.find((_, index) => index === tabIndex);
-    console.log('[App.js] handleChangeTab fileToSet', fileToSet);
+    console.log("[App.js] handleChangeTab fileToSet", fileToSet);
 
-    this.setState({ 
-      sourceCodeTabIndex: tabIndex, 
+    this.setState({
+      sourceCodeTabIndex: tabIndex,
       currentFile: fileToSet
     });
   }
 
   getLinesToHighlight() {
-    const { exceptionData, logData } = this.state
+    const { exceptionData, logData } = this.state;
     let exceptionLineNumbers = [];
     if (exceptionData.length !== 0) {
       exceptionData.forEach(exception => {
         exception.forEach(loggingPoint => {
-          exceptionLineNumbers.push(loggingPoint.lineNumber)
-        })
-      })
+          exceptionLineNumbers.push(loggingPoint.lineNumber);
+        });
+      });
     }
 
     let logLineNumbers = [];
     if (logData.length !== 0) {
       logData.forEach(log => {
         log.forEach(loggingPoint => {
-          logLineNumbers.push(loggingPoint.lineNumber)
-        })
+          logLineNumbers.push(loggingPoint.lineNumber);
+        });
       });
     }
 
@@ -197,11 +216,11 @@ class App extends React.PureComponent {
   }
 
   handleTabExitButtonClicked(fileToRemove) {
-    console.log('[App.js] handleTabExit fileToRemove: ', fileToRemove);
+    console.log("[App.js] handleTabExit fileToRemove: ", fileToRemove);
     const files = [...this.state.allSelectedFiles];
 
     const filesUpdated = files.filter(file => {
-      console.log('[App.js] file.fileName', file.fileName)
+      console.log("[App.js] file.fileName", file.fileName);
       if (file.fileName !== fileToRemove) {
         return file;
       } else {
@@ -209,14 +228,21 @@ class App extends React.PureComponent {
       }
     });
 
-    console.log('[App.js] handleTabExitButtonClicked filesUpdated.length: ', filesUpdated.length);
-    const tabIndex = (this.state.sourceCodeTabIndex <= filesUpdated.length - 1) 
-      ? this.state.sourceCodeTabIndex 
-      : filesUpdated.length - 1;
-    
-      console.log(this.state.sourceCodeTabIndex <= filesUpdated.length - 1) 
-      console.log('[App.js] handleTabExitButtonClicked this.state.tabIndex: ', this.state.sourceCodeTabIndex);
-      console.log('[App.js] handleTabExitButtonClicked tabIndex: ', tabIndex);
+    console.log(
+      "[App.js] handleTabExitButtonClicked filesUpdated.length: ",
+      filesUpdated.length
+    );
+    const tabIndex =
+      this.state.sourceCodeTabIndex <= filesUpdated.length - 1
+        ? this.state.sourceCodeTabIndex
+        : filesUpdated.length - 1;
+
+    console.log(this.state.sourceCodeTabIndex <= filesUpdated.length - 1);
+    console.log(
+      "[App.js] handleTabExitButtonClicked this.state.tabIndex: ",
+      this.state.sourceCodeTabIndex
+    );
+    console.log("[App.js] handleTabExitButtonClicked tabIndex: ", tabIndex);
 
     this.setState({
       allSelectedFiles: filesUpdated,
@@ -224,23 +250,18 @@ class App extends React.PureComponent {
     });
   }
 
-  // setDummy() {
-  //   const currentFile = this.state.currentFile;
-  //   this.setState(dummy: currentFile);
-  // }
-
   async handleIssueClicked(issueTitle) {
-    const {exception, log, sourceCode} = await this.fetchDocument(issueTitle);
+    const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
     const linesToHighlight = this.getLinesToHighlight();
 
     this.setState({
       currentIssue: issueTitle,
-      currentFile: '',
+      currentFile: "",
       allSelectedFiles: [],
       exceptionData: exception,
       logData: log,
       sourceCode,
-      linesToHighlight,
+      linesToHighlight
     });
   }
 
@@ -251,22 +272,23 @@ class App extends React.PureComponent {
     } catch (error) {
       console.log("Error in callApi", error);
     }
-  };
+  }
 
   async fetchDocument(issueTitle) {
     try {
-      const data = await fetch("/issues/" + issueTitle, {
-        // method: "GET",
-        // headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify({ post: issueTitle })
-      });
+      const data = await fetch("/issues/" + issueTitle);
       const body = await data.text();
-      // console.log('[App.js] body', JSON.parse(body));
       return JSON.parse(body);
     } catch (error) {
       console.log("error", error);
     }
-  };
+  }
+
+  toggleGridView() {
+    console.log(this.state.gridView);
+    const gridViewState = !this.state.gridView;
+    this.setState({ gridView: gridViewState });
+  }
 }
 
 export default App;

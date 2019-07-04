@@ -20,9 +20,3 @@
   padding-bottom: 2px;
   background: yellow;
 }
-
-/* Need to find a better way to format the target line with a little padding on top */
-/* .targetLinePadding { 
-  line-height: 1px;
-  font-size: 2px;
-} */

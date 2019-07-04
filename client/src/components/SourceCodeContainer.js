@@ -2,12 +2,13 @@ import React from "react";
 import { Element, Events, animateScroll, scroller } from "react-scroll";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-// import { Link } from "react-scroll";
 
 import CodeLine from "./CodeLine";
+import SourceCodeGridElement from "./SourceCodeGridElement";
 import "./SourceCodeContainer.css";
 
-// const SCROLL_OFFSET_PX = -80;
+const SCROLL_OFFSET_PX_TAB = -8;
+const SCROLL_OFFSET_PX_GRID = -4;
 const SCROLL_DURATION = 250;
 
 class SourceCodeContainer extends React.PureComponent {
@@ -18,15 +19,15 @@ class SourceCodeContainer extends React.PureComponent {
 
   componentDidMount() {
     Events.scrollEvent.register("begin", () => {
-      console.log("begin", arguments);
+      // console.log("begin", arguments);
     });
     Events.scrollEvent.register("end", () => {
-      console.log("end", arguments);
+      // console.log("end", arguments);
     });
   }
 
   componentDidUpdate() {
-    console.log('[SourceCodeContainer.js] componentDidUpdate')
+    // console.log("[SourceCodeContainer.js] componentDidUpdate");
     this.scrollToCurrentLine();
   }
 
@@ -36,33 +37,37 @@ class SourceCodeContainer extends React.PureComponent {
   }
 
   scrollToCurrentLine() {
-    console.log('[SourceCodeContainer.js] currentLine: ', this.props.file.lineNumber);
-    console.log('[SourceCodeContainer.js] scrollTo()');
+    const containerId = this.props.gridView
+      ? "containerElement" + this.props.file.fileName
+      : "containerElement";
 
-    scroller.scrollTo((this.props.file.lineNumber -8).toString(), {
+    const scrollOffset = this.props.gridView
+      ? SCROLL_OFFSET_PX_GRID
+      : SCROLL_OFFSET_PX_TAB;
+
+    scroller.scrollTo((this.props.file.lineNumber + scrollOffset).toString(), {
       smooth: true,
-      duration:  SCROLL_DURATION,
-      containerId: "containerElement",
+      duration: 0,
+      containerId: containerId,
       to: this.props.file.lineNumber
     });
   }
 
   render() {
-    console.log('RENDERED SourceCodeContainer');
 
-    const { 
+    const {
       onClick,
       onExitButtonClick,
-      sourceCode, 
-      linesToHighlight, 
-      file, 
+      sourceCode,
+      linesToHighlight,
+      file,
       allSelectedFiles,
-      tabIndex
+      tabIndex,
+      gridView
     } = this.props;
 
     const sourceCodeToRender = sourceCode.filter(elem => {
       if (elem.fileName === file.fileName) {
-        console.log("[SourceCodeContainer.js] sourceCode elem", elem);
         return elem;
       } else {
         return null;
@@ -84,40 +89,52 @@ class SourceCodeContainer extends React.PureComponent {
         })
       : null;
 
-    // console.log('[SourceCodeContainer.js] tabIndex: ', tabIndex);
-
-    const tabsList = allSelectedFiles 
+    const tabsList = allSelectedFiles
       ? allSelectedFiles.map((elem, index) => {
-        let currentFileName = elem.fileName;
-        // console.log('[SourceCodeContainer.js] currentFileName for onExitButtonClick', currentFileName)
+          let currentFileName = elem.fileName;
           return (
-            <Tab key={elem.fileName}>
-              {elem.fileName}
-              <button className="tabExitButton" onClick={() => onExitButtonClick(currentFileName)}>x</button>
+            <Tab key={currentFileName}>
+              {currentFileName}
+              <button
+                className="tabExitButton"
+                onClick={() => onExitButtonClick(currentFileName)}
+              >
+                x
+              </button>
             </Tab>
-          )
+          );
         })
       : null;
 
-    const tabPanelsList = allSelectedFiles 
+    const tabPanelsList = allSelectedFiles
       ? allSelectedFiles.map(elem => {
-          return (
-            <TabPanel key={elem}></TabPanel>
-          )
+          return <TabPanel key={elem.fileName} />;
         })
       : null;
-      
-    //console.log('[SourceCodeContainer.js] sourceCode: ', sourceCode);
+
     const tabsMarkup = file ? (
       <div className="tabHeader">
         <Tabs selectedIndex={tabIndex} onSelect={tabIndex => onClick(tabIndex)}>
-          <TabList>
-            {tabsList}
-          </TabList>
+          <TabList>{tabsList}</TabList>
           {tabPanelsList}
         </Tabs>
       </div>
     ) : null;
+
+    const gridMarkup = file
+      ? allSelectedFiles.map(file => {
+          const sourceCodeElement = sourceCode.find(elem => {
+            return file.fileName === elem.fileName;
+          });
+          return (
+            <SourceCodeGridElement
+              file={file}
+              sourceCode={sourceCodeElement}
+              linesToHighlight={linesToHighlight}
+            />
+          );
+        })
+      : null;
 
     const elementStyle = file
       ? {
@@ -130,11 +147,12 @@ class SourceCodeContainer extends React.PureComponent {
 
     const elementClassName = file ? "element" : null;
 
-    return (
+    const sourceCodeMarkup = gridView ? (
+      <div className="sourceCodeGrid">{gridMarkup}</div>
+    ) : (
       <div>
         {tabsMarkup}
         <Element
-          // name="test7"
           className={elementClassName}
           id="containerElement"
           style={elementStyle}
@@ -143,7 +161,35 @@ class SourceCodeContainer extends React.PureComponent {
         </Element>
       </div>
     );
+
+    return <div>{sourceCodeMarkup}</div>;
   }
 }
 
 export default SourceCodeContainer;
+
+/* gridMarkup overview:
+<div className= -------->"sourceCodeGrid">
+  <SourceCodeGridElement>
+    <Element
+      className=-------->"gridContainer"
+      id={"containerElement" + sourceCode.fileName}
+    >
+      <Element name={`${line.lineNumber}`} key={line.lineNumber}>
+        <CodeLine
+          code={line}
+          linesToHighlight={linesToHighlight}
+          file={file}
+        />
+        </Element>
+    </Element>
+  </SourceCodeGridElement>
+
+  .gridContainer {
+    position: "relative",
+    height: "500px",
+    overflow: "auto",
+    marginBottom: "100px"
+  }
+
+*/
