@@ -1,0 +1,62 @@
+.navigation {
+  display: flex;
+  list-style: none;
+  background: rgb(169, 175, 180);
+  color: white;
+  position: fixed;
+  width: 100%;
+  height: 30px;
+  font-size: 25px;
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+  border-bottom: 1px solid rgb(169, 175, 180);
+  box-shadow: 0 2px 3px rgb(116, 121, 124); 
+  z-index: 3;
+  overflow-y: auto;
+}
+
+.title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inputDropdown {
+  color: black;
+  font-size: 15px;
+  background: white;
+  border: 1px solid gray;
+  margin-left: 10px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 2px 4px 1px rgba(0,0,0,.18);
+  overflow-y: auto;
+  z-index: 4;
+  position: fixed;
+}
+
+.inputDropdown input {
+  font-size: 15px;
+  border: none;
+  padding: 5px 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.inputDropdown ul {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid gray;
+  text-align: left;
+  list-style-type: none;
+}
+
+.inputDropdown ul::before {
+  content: "";
+}
+
+.inputDropdown li {
+  padding: 5px 5px;
+}
+
+.inputDropdown li:hover {
+  background: rgb(222, 240, 202);
+}

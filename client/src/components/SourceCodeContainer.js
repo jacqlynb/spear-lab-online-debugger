@@ -76,7 +76,7 @@ class SourceCodeContainer extends React.PureComponent {
     });
 
     // if call path element selected
-    const codeLinesMarkup = file
+    const codeLinesMarkup = (file && allSelectedFiles.length > 0)
       ? sourceCodeToRender.map(elem => {
           return elem.codeLines.map(line => (
             <Element name={`${line.lineNumber}`} key={line.lineNumber}>

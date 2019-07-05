@@ -3,6 +3,7 @@ import ExceptionContainer from "../components/ExceptionContainer";
 import LogContainer from "../components/LogContainer";
 import SourceCodeContainer from "../components/SourceCodeContainer";
 import Issues from "../components/Issues";
+import Navbar from "../components/Navbar";
 import "./App.css";
 
 const gridIcon = require("../grid-icon.png");
@@ -17,6 +18,7 @@ class App extends React.PureComponent {
       this
     );
     this.toggleGridView = this.toggleGridView.bind(this);
+    this.handleClickOutsideSearchBox = this.handleClickOutsideSearchBox.bind(this);
   }
 
   state = {
@@ -38,7 +40,8 @@ class App extends React.PureComponent {
     ],
     sourceCodeTabIndex: 0,
     currentLoggingPoint: "",
-    gridView: false
+    gridView: false,
+    searchSuggestions: []
   };
 
   componentDidMount() {
@@ -60,7 +63,8 @@ class App extends React.PureComponent {
       currentFile,
       allSelectedFiles,
       sourceCodeTabIndex,
-      gridView
+      gridView,
+      searchSuggestions
     } = this.state;
 
     const issuesMarkup =
@@ -124,9 +128,13 @@ class App extends React.PureComponent {
 
     return (
       <div className="app">
-        <div className="header">Working title</div>
+        <Navbar
+          issues={issues}
+          suggestions={searchSuggestions}
+          onClickOutsideSearchBox={this.handleClickOutsideSearchBox}
+          onIssueClick={this.handleIssueClicked}
+        />
         <div className="container">
-          <div className="issueContainer">{issuesMarkup}</div>
           <div className="callPath">
             {exceptionMarkup}
             {logMarkup}
@@ -166,7 +174,7 @@ class App extends React.PureComponent {
         let newFile = file;
         if (file.fileName === fileName) {
           tabIndex = index;
-          newFile.lineNumber = lineNumber
+          newFile.lineNumber = lineNumber;
         }
         return newFile;
       });
@@ -228,10 +236,6 @@ class App extends React.PureComponent {
       }
     });
 
-    console.log(
-      "[App.js] handleTabExitButtonClicked filesUpdated ",
-      filesUpdated
-    );
     const tabIndex =
       this.state.sourceCodeTabIndex <= filesUpdated.length - 1
         ? this.state.sourceCodeTabIndex
@@ -244,6 +248,7 @@ class App extends React.PureComponent {
   }
 
   async handleIssueClicked(issueTitle) {
+    console.log("issue clicked!")
     const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
     const linesToHighlight = this.getLinesToHighlight();
 
@@ -281,6 +286,11 @@ class App extends React.PureComponent {
     console.log(this.state.gridView);
     const gridViewState = !this.state.gridView;
     this.setState({ gridView: gridViewState });
+  }
+
+  handleClickOutsideSearchBox() {
+    console.log("Called!!!");
+    this.setState({ suggestions: [] });
   }
 }
 
