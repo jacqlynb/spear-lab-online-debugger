@@ -1,6 +1,6 @@
 import React from "react";
 import LoggingPoints from "./LoggingPoints";
-import "./Callpath.css";
+import "./CallPath.css";
 
 // TODO: convert to function component
 class Callpath extends React.Component {
