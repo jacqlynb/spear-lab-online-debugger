@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "d3": "^5.9.7",
+    "d3-array": "^2.2.0",
+    "dagre-d3": "^0.6.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",

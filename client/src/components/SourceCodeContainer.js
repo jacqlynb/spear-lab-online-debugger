@@ -149,6 +149,11 @@ class SourceCodeContainer extends React.PureComponent {
 
     const elementClassName = file ? "element" : null;
 
+    const blankSpace = [];
+    for (let i = 1; i <= 30; i++) {
+      blankSpace.push(<br />);
+    }
+
     const sourceCodeMarkup = gridView ? (
       <div className="sourceCodeGrid">{gridMarkup}</div>
     ) : (
@@ -160,6 +165,7 @@ class SourceCodeContainer extends React.PureComponent {
           style={elementStyle}
         >
           {codeLinesMarkup}
+          {blankSpace}
         </Element>
       </div>
     );

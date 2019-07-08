@@ -1,7 +1,7 @@
 .navigation {
   display: flex;
   list-style: none;
-  background: rgb(169, 175, 180);
+  background: rgb(144, 144, 153);
   color: white;
   position: fixed;
   width: 100%;
@@ -10,15 +10,22 @@
   text-align: center;
   padding: 5px;
   margin: 0;
-  border-bottom: 1px solid rgb(169, 175, 180);
-  box-shadow: 0 2px 3px rgb(116, 121, 124); 
+  border-bottom: 1px solid rgb(144, 144, 153);
+  box-shadow: 0 2px 3px rgb(91, 91, 97); 
   z-index: 3;
   overflow-y: auto;
+  justify-content: space-between;
 }
 
 .title {
-  margin-left: auto;
-  margin-right: auto;
+  justify-self: center;
+  padding-left: 10px;
+}
+
+label {
+  margin-left: 200px;
+  padding-right: 20px;
+  font-size: 16px;
 }
 
 .inputDropdown {
@@ -27,6 +34,7 @@
   background: white;
   border: 1px solid gray;
   margin-left: 10px;
+  margin-right: 10px;
   box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 2px 4px 1px rgba(0,0,0,.18);
   overflow-y: auto;
   z-index: 4;

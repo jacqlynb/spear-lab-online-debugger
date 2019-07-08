@@ -72,6 +72,7 @@ class Navbar extends React.Component {
     return (
       <div className="navbar">
         <ul className="navigation" role="navigation">
+          <li className="title">working title</li>
           <li className="searchbar">
             <div className="inputDropdown" ref={this.setWrapperRef}>
               <input
@@ -83,8 +84,8 @@ class Navbar extends React.Component {
               />
               <ul>{suggestionListMarkup}</ul>
             </div>
+            <label>Search Issues</label>
           </li>
-          <li className="title">working title</li>
         </ul>
       </div>
     );

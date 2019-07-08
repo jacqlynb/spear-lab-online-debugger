@@ -61,7 +61,8 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  background: rgb(182, 219, 230);
+  background: rgb(128, 128, 139);
+  color: white;
   margin: 0 15px 0 0;
   padding: 0 7px;
 }
@@ -77,9 +78,8 @@
   max-height: 250px;
   margin-right: 15px;
   background: rgb(245, 245, 245);
+  margin-bottom: 15px;
 }
-
-
 
 /* 
 .gridElement {

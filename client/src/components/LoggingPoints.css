@@ -1,9 +1,7 @@
 .LoggingPoint {
   border-top: 1px solid #999;
-  border-left: 1px solid #999;
-  border-right: 1px solid #999;
   background-color: white;
-  margin: 0 10px 0 10px;
+  margin: 0;
   padding: 8px 5px;
   line-height: 8px;
   font-size: 11px;
@@ -17,6 +15,7 @@
 
 .LoggingPoint--active {
   font-weight: bold;
+  color: red;
 }
 
 .fileName {

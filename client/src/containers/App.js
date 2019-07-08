@@ -1,12 +1,13 @@
 import React from "react";
+import Navbar from "../components/Navbar";
 import ExceptionContainer from "../components/ExceptionContainer";
 import LogContainer from "../components/LogContainer";
 import SourceCodeContainer from "../components/SourceCodeContainer";
-import Issues from "../components/Issues";
-import Navbar from "../components/Navbar";
+// import GraphContainer from "../components/GraphContainer";
 import "./App.css";
 
 const gridIcon = require("../grid-icon.png");
+const tabIcon = require("../tab-icon.png");
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -18,7 +19,9 @@ class App extends React.PureComponent {
       this
     );
     this.toggleGridView = this.toggleGridView.bind(this);
-    this.handleClickOutsideSearchBox = this.handleClickOutsideSearchBox.bind(this);
+    this.handleClickOutsideSearchBox = this.handleClickOutsideSearchBox.bind(
+      this
+    );
   }
 
   state = {
@@ -41,7 +44,7 @@ class App extends React.PureComponent {
     sourceCodeTabIndex: 0,
     currentLoggingPoint: "",
     gridView: false,
-    searchSuggestions: []
+    searchSuggestions: [],
   };
 
   componentDidMount() {
@@ -67,19 +70,6 @@ class App extends React.PureComponent {
       searchSuggestions
     } = this.state;
 
-    const issuesMarkup =
-      issues.length === 0 ? null : (
-        <div className="issues">
-          {/* Use h2 or h3 instead of p tag */}
-          <p className="issuesHeader">Issues:</p>
-          <Issues
-            clicked={this.handleIssueClicked}
-            issues={issues}
-            currentIssue={currentIssue}
-          />
-        </div>
-      );
-
     const exceptionMarkup =
       exceptionData.length === 0 ? null : (
         <div className="exception">
@@ -96,7 +86,11 @@ class App extends React.PureComponent {
       logData.length === 0 ? null : (
         <div className="log">
           <p className="exceptionHeader">Log: </p>
-          <LogContainer logData={logData} />
+          <ExceptionContainer
+            exceptionData={logData}
+            onClick={this.handleFileChanged}
+            currentFile={currentFile}
+          />
         </div>
       );
 
@@ -108,7 +102,7 @@ class App extends React.PureComponent {
             <img
               className="gridIcon"
               onClick={this.toggleGridView}
-              src={gridIcon}
+              src={this.state.gridView ? tabIcon : gridIcon}
               alt="Grid view icon"
             />
           </div>
@@ -139,7 +133,9 @@ class App extends React.PureComponent {
             {exceptionMarkup}
             {logMarkup}
           </div>
-          <div className="sourceCode">{sourceCodeMarkup}</div>
+          <div className="sourceCode">
+            {sourceCodeMarkup}
+          </div>
         </div>
       </div>
     );
@@ -248,7 +244,7 @@ class App extends React.PureComponent {
   }
 
   async handleIssueClicked(issueTitle) {
-    console.log("issue clicked!")
+    console.log("issue clicked!");
     const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
     const linesToHighlight = this.getLinesToHighlight();
 
