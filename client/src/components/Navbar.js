@@ -56,9 +56,9 @@ class Navbar extends React.Component {
 
     const suggestionListMarkup =
       suggestions.length > 0
-        ? suggestions.map(suggestion => {
+        ? suggestions.map((suggestion, index) => {
             return (
-              <li onClick={() => this.handleDropDownIssueClick(suggestion)}>
+              <li key={index} onClick={() => this.handleDropDownIssueClick(suggestion)}>
                 {suggestion}
               </li>
             );
@@ -79,7 +79,7 @@ class Navbar extends React.Component {
                 type="text"
                 id="targetIssue"
                 onChange={this.onSearchTextChange}
-                value={searchBoxValue}
+                value={searchBoxValue || ''}
                 autoComplete="off"
               />
               <ul>{suggestionListMarkup}</ul>

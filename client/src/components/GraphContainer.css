@@ -1,0 +1,68 @@
+/* .graph {
+  background-color: white;
+  width: 100%;
+}
+
+.graph div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+} */
+h1 {
+  color: blue;
+}
+
+path {
+  fill: none;
+  stroke: #57bdc3;;
+}
+
+text {
+  fill: black;
+  text-shadow: 
+    -1px -1px 3px white,    
+    -1px  1px 3px white,
+     1px -1px 3px white,
+     1px  1px 3px white;
+  pointer-events: none;
+}
+
+.chart rect {
+  fill: steelblue;
+}
+
+rect:hover {
+  -moz-transition: all 0.5s; 
+  -o-transition: all 0.5s; 
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  fill: orange;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+.chart p {
+  color: black;
+}
+
+div.bar {
+  display: inline-block;
+  width: 20px;
+  height: 50px;
+  background-color: lightsteelblue;
+}
+
+circle {
+  fill: lightgreen;
+}
+
+circle.text {
+  fill: black;
+}

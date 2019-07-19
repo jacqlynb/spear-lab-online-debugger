@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import ExceptionContainer from "../components/ExceptionContainer";
 import LogContainer from "../components/LogContainer";
 import SourceCodeContainer from "../components/SourceCodeContainer";
-// import GraphContainer from "../components/GraphContainer";
+import GraphContainer from "../components/GraphContainer";
 import "./App.css";
 
 const gridIcon = require("../grid-icon.png");
@@ -45,6 +45,7 @@ class App extends React.PureComponent {
     currentLoggingPoint: "",
     gridView: false,
     searchSuggestions: [],
+    graphView: false
   };
 
   componentDidMount() {
@@ -58,7 +59,6 @@ class App extends React.PureComponent {
   render() {
     const {
       issues,
-      currentIssue,
       exceptionData,
       logData,
       sourceCode,
@@ -67,8 +67,18 @@ class App extends React.PureComponent {
       allSelectedFiles,
       sourceCodeTabIndex,
       gridView,
-      searchSuggestions
+      searchSuggestions,
+      graphView
     } = this.state;
+
+    const navBarMarkup = (
+      <Navbar
+        issues={issues}
+        suggestions={searchSuggestions}
+        onClickOutsideSearchBox={this.handleClickOutsideSearchBox}
+        onIssueClick={this.handleIssueClicked}
+      />
+    );
 
     const exceptionMarkup =
       exceptionData.length === 0 ? null : (
@@ -120,21 +130,30 @@ class App extends React.PureComponent {
         </div>
       );
 
-    return (
+    const graphMarkup = (
       <div className="app">
-        <Navbar
-          issues={issues}
-          suggestions={searchSuggestions}
-          onClickOutsideSearchBox={this.handleClickOutsideSearchBox}
-          onIssueClick={this.handleIssueClicked}
-        />
+        {navBarMarkup}
+        <div className="container">
+          <div className="graphContainer">
+            <GraphContainer logData={logData} />
+          </div>
+        </div>
+      </div>
+    );
+
+    // change to callPathContainer, sourceCodeContainer, etc? 
+    return graphView ? (
+      graphMarkup
+    ) : (
+      <div className="app">
+        {navBarMarkup}
         <div className="container">
           <div className="callPath">
             {exceptionMarkup}
             {logMarkup}
           </div>
           <div className="sourceCode">
-            {sourceCodeMarkup}
+            {graphView ? graphMarkup : sourceCodeMarkup}
           </div>
         </div>
       </div>
@@ -248,6 +267,8 @@ class App extends React.PureComponent {
     const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
     const linesToHighlight = this.getLinesToHighlight();
 
+    const graphView = issueTitle === "HADOOP-2486-with-raw-log";
+
     this.setState({
       currentIssue: issueTitle,
       currentFile: "",
@@ -255,7 +276,8 @@ class App extends React.PureComponent {
       exceptionData: exception,
       logData: log,
       sourceCode,
-      linesToHighlight
+      linesToHighlight,
+      graphView
     });
   }
 
