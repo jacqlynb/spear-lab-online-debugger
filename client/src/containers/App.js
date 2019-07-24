@@ -1,9 +1,9 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import ExceptionContainer from "../components/ExceptionContainer";
-import LogContainer from "../components/LogContainer";
-import SourceCodeContainer from "../components/SourceCodeContainer";
-import GraphContainer from "../components/GraphContainer";
+import ExceptionContainer from "../containers/ExceptionContainer";
+import RawLogContainer from "../containers/RawLogContainer";
+import SourceCodeContainer from "../containers/SourceCodeContainer";
+import GraphContainer from "../containers/GraphContainer";
 import "./App.css";
 
 const gridIcon = require("../grid-icon.png");
@@ -92,18 +92,6 @@ class App extends React.PureComponent {
         </div>
       );
 
-    const logMarkup =
-      logData.length === 0 ? null : (
-        <div className="log">
-          <p className="exceptionHeader">Log: </p>
-          <ExceptionContainer
-            exceptionData={logData}
-            onClick={this.handleFileChanged}
-            currentFile={currentFile}
-          />
-        </div>
-      );
-
     const sourceCodeMarkup =
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
@@ -130,27 +118,23 @@ class App extends React.PureComponent {
         </div>
       );
 
+    const rawLogMarkup = (
+      <RawLogContainer logData={logData}/>
+    )
+
     const graphMarkup = (
-      <div className="app">
-        {navBarMarkup}
-        <div className="container">
           <div className="graphContainer">
-            <GraphContainer logData={logData} />
+            <GraphContainer/>
           </div>
-        </div>
-      </div>
     );
 
     // change to callPathContainer, sourceCodeContainer, etc? 
-    return graphView ? (
-      graphMarkup
-    ) : (
+    return (
       <div className="app">
         {navBarMarkup}
         <div className="container">
-          <div className="callPath">
-            {exceptionMarkup}
-            {logMarkup}
+          <div className={graphView ? "rawLogContainer" : "exceptionContainer"}>
+            {graphView ? rawLogMarkup : exceptionMarkup}
           </div>
           <div className="sourceCode">
             {graphView ? graphMarkup : sourceCodeMarkup}

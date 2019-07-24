@@ -47,11 +47,28 @@
   overflow: auto;
 }
 
-.graphContainer {
+.rawLogContainer {
+  flex: 20;
   padding-top: 40px;
-  margin-top: 40px;
+  padding-right: 10px;
   margin-left: 20px;
+}
+
+/* .rawLogLine {
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 15px;
+} */
+
+.rawLogLine:hover {
+  background: lightgray;
+}
+
+.graphContainer {
+  flex: 2;
+  margin-top: 60px;
+  margin-left: 0px;
   height: 100%;
+  z-index: 2;
 }
 
 .code {

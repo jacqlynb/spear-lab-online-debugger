@@ -1,5 +1,5 @@
 import React from "react";
-import Callpath from "./CallPath.js";
+import Callpath from "../components/CallPath.js";
 
 // TODO: convert this to a function component
 class ExceptionContainer extends React.PureComponent {

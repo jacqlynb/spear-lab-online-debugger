@@ -3,8 +3,8 @@ import { Element, Events, animateScroll, scroller } from "react-scroll";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
-import CodeLine from "./CodeLine";
-import SourceCodeGridElement from "./SourceCodeGridElement";
+import CodeLine from "../components/CodeLine";
+import SourceCodeGridElement from "../components/SourceCodeGridElement";
 import "./SourceCodeContainer.css";
 
 const SCROLL_OFFSET_PX_TAB = -8;
