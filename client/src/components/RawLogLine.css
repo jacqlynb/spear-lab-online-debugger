@@ -1,0 +1,54 @@
+
+.rawLogLine {
+  background: lightgray;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.logLineWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.checkbox--input {
+  display: none;
+}
+
+.checkbox--input + span {
+  color: red;
+  display: flex;
+  flex-direction: row;
+  width: 25px;
+  height: 25px;
+  background: #00CECC;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 5px;
+  border: 0px solid #00CECC;
+  box-sizing: border-box;
+  transition: all 150ms;
+  margin: 0px 15px;
+}
+.checkbox--input:checked + span {
+  border-width: 12.5px;
+}
+.checkbox--input:checked + span::before {
+  content: 'check';
+  font-family: 'Material Icons';
+  font-size: 20px;
+  background: #00CECC;
+  color: black;
+}
+.checkbox--input:disabled + span {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.logText {
+  margin-left: 10px;
+}
+
+

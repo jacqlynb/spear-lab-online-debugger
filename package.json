@@ -11,8 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^4.2.1",
+    "@material-ui/icons": "^4.2.1",
+    "@shopify/polaris": "^3.20.0",
     "body-parser": "^1.18.3",
     "d3": "^5.9.7",
+    "d3plus-text": "^0.9.45",
     "dagre": "^0.8.4",
     "dagre-d3": "^0.6.3",
     "express": "^4.16.4",
