@@ -1,5 +1,5 @@
 import React from "react";
-import { Element, Events, animateScroll, scroller } from "react-scroll";
+import { Element, Events, scroller } from "react-scroll";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
@@ -9,7 +9,7 @@ import "./SourceCodeContainer.css";
 
 const SCROLL_OFFSET_PX_TAB = -8;
 const SCROLL_OFFSET_PX_GRID = -4;
-const SCROLL_DURATION = 250;
+// const SCROLL_DURATION = 250;
 
 class SourceCodeContainer extends React.PureComponent {
   constructor(props) {
@@ -123,12 +123,13 @@ class SourceCodeContainer extends React.PureComponent {
     ) : null;
 
     const gridMarkup = file
-      ? allSelectedFiles.map(file => {
+      ? allSelectedFiles.map((file, i) => {
           const sourceCodeElement = sourceCode.find(elem => {
             return file.fileName === elem.fileName;
           });
           return (
             <SourceCodeGridElement
+              key={i}
               onClick={onExitButtonClick}
               file={file}
               sourceCode={sourceCodeElement}
@@ -151,7 +152,7 @@ class SourceCodeContainer extends React.PureComponent {
 
     const blankSpace = [];
     for (let i = 1; i <= 30; i++) {
-      blankSpace.push(<br />);
+      blankSpace.push(<br key={i} />);
     }
 
     const sourceCodeMarkup = gridView ? (

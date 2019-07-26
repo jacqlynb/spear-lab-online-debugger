@@ -54,11 +54,6 @@
   margin-left: 20px;
 }
 
-/* .rawLogLine {
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 15px;
-} */
-
 .rawLogLine:hover {
   background: lightgray;
 }
@@ -76,21 +71,54 @@
     monospace;
 }
 
-.gridIcon {
-  height: 30px;
-  width: auto;
-  align-self: center;
-}
-
-.gridIcon:hover {
-  cursor: pointer;
-}
-
 .sourceCodeHeaderWrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
-  margin-right: 20px;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 20px 20px 10px 0;
 }
+
+.gridIcon {
+  height: 28px;
+  width: auto;
+  align-self: center;
+  margin-left: 12px;
+  opacity: 0.45;
+}
+
+.gridIcon:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.tabIcon {
+  height: 30px;
+  width: auto;
+  align-self: center;
+  margin-left: 8px;
+  opacity: 0.45;
+  color: lightgray;
+}
+
+.tabIcon:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.graphIcon {
+  height: 25px;
+  width: auto;
+  align-self: center;
+  margin-left: 8px;
+  opacity: 0.45;
+  transform: rotate(-90deg);
+}
+
+.graphIcon:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
 

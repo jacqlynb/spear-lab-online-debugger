@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@material-ui/icons';
 import './RawLogLine.css';
 
 class RawLogLine extends React.Component {

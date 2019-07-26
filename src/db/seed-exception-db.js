@@ -46,13 +46,6 @@ fs.readdir(dirName, (err, files) => {
           let codeLines = [];
           let filePath = dirName + outerDirName + file;
           
-          // const exceptionSchema = new Schema({
-          //   title: String,
-          //   exception: [[logSchema]],
-          //   log: [],
-          //   sourceCode: [{fileName: String, codeLines: [sourceCodeSchema]}]
-          // });
-          
           // if .json extension, save as exception data
           if (file.includes('.json')) {
             let fileString = fs.readFileSync(filePath).toString();
@@ -107,14 +100,17 @@ fs.readdir(dirName, (err, files) => {
 
         if (currentException.log) {
           currentException.log.forEach(callPath => {
-            callPath.forEach(element => {
-              sourceCode.forEach(line => {
-                if (element.lineNumber == line.lineNumber && line.codeLine.includes(element.methodName)) {
-                  element.fileName = line.documentTitle;
-                }
-              });
+            callPath.forEach(callPathElem => {
+              sourceCode.forEach(sourceCodeElem => {
+                sourceCodeElem.codeLines.forEach(line => {
+                  if (callPathElem.lineNumber == line.lineNumber 
+                      && line.codeLine.includes(callPathElem.methodName)) {
+                        callPathElem.fileName = sourceCodeElem.fileName;
+                  }
+                })
+              })
             });
-          })
+          });
         }
     
       // after mapping over all files is completed, finally add source code array to exception object

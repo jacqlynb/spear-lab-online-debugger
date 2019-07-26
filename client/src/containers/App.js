@@ -1,13 +1,15 @@
-import React from "react";
-import Navbar from "../components/Navbar";
-import ExceptionContainer from "../containers/ExceptionContainer";
-import RawLogContainer from "../containers/RawLogContainer";
-import SourceCodeContainer from "../containers/SourceCodeContainer";
-import GraphContainer from "../containers/GraphContainer";
-import "./App.css";
+import React from 'react';
+import ReactTooltip from 'react-tooltip';
+import Navbar from '../components/Navbar';
+import ExceptionContainer from '../containers/ExceptionContainer';
+import RawLogContainer from '../containers/RawLogContainer';
+import SourceCodeContainer from '../containers/SourceCodeContainer';
+import GraphContainer from '../containers/GraphContainer';
+import './App.css';
 
-const gridIcon = require("../grid-icon.png");
-const tabIcon = require("../tab-icon.png");
+const gridIcon = require('../images/view-grid.svg');
+const tabIcon = require('../images/folder-text.svg');
+const graphIcon = require('../images/graph-icon.svg');
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -15,10 +17,10 @@ class App extends React.PureComponent {
     this.handleIssueClicked = this.handleIssueClicked.bind(this);
     this.handleFileChanged = this.handleFileChanged.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
-    this.handleTabExitButtonClicked = this.handleTabExitButtonClicked.bind(
-      this
-    );
+    this.handleTabExitClicked = this.handleTabExitClicked.bind(this);
     this.toggleGridView = this.toggleGridView.bind(this);
+    this.toggleTabView = this.toggleTabView.bind(this);
+    this.toggleGraphView = this.toggleGraphView.bind(this);
     this.handleClickOutsideSearchBox = this.handleClickOutsideSearchBox.bind(
       this
     );
@@ -42,16 +44,19 @@ class App extends React.PureComponent {
       }
     ],
     sourceCodeTabIndex: 0,
-    currentLoggingPoint: "",
-    gridView: false,
+    currentLoggingPoint: '',
     searchSuggestions: [],
+    rawLogData: false,
+    gridView: false,
+    tabView: false,
     graphView: false
   };
 
   componentDidMount() {
     this.fetchIssues()
       .then(issues => {
-        this.setState({ issues });
+        console.log('[App.js] componentDidMount', issues);
+        this.setState({ issues, graphView: false });
       })
       .catch(err => console.log(err));
   }
@@ -67,8 +72,10 @@ class App extends React.PureComponent {
       allSelectedFiles,
       sourceCodeTabIndex,
       gridView,
+      tabView,
+      graphView,
       searchSuggestions,
-      graphView
+      rawLogData
     } = this.state;
 
     const navBarMarkup = (
@@ -92,50 +99,99 @@ class App extends React.PureComponent {
         </div>
       );
 
+    const logMarkup =
+      logData.length === 0 ? null : (
+        <div className="exception">
+          <p className="exceptionHeader">Log: </p>
+          <ExceptionContainer
+            onClick={this.handleFileChanged}
+            exceptionData={logData}
+            currentFile={currentFile}
+          />
+        </div>
+      );
+
+    const gridViewIconMarkup = (
+      <div>
+        <img
+          data-tip="Grid view"
+          className="gridIcon"
+          onClick={gridView ? null : this.toggleGridView}
+          src={gridIcon}
+          alt="Grid view"
+        />
+        <ReactTooltip />
+      </div>
+    );
+
+    const tabViewIconMarkup = (
+      <div>
+        <img
+          data-tip="Tab view"
+          className="tabIcon"
+          onClick={tabView ? null : this.toggleTabView}
+          src={tabIcon}
+          alt="Tab view"
+        />
+        <ReactTooltip />
+      </div>
+    );
+
+    const graphViewIconMarkup = (
+      <div>
+        <img
+          data-tip="Graph view"
+          className="graphIcon"
+          onClick={graphView ? null : this.toggleGraphView}
+          src={graphIcon}
+          alt="Tab view"
+        />
+        <ReactTooltip />
+      </div>
+    );
+
     const sourceCodeMarkup =
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
           <div className="sourceCodeHeaderWrapper">
-            <p className="sourceCodeHeader">Source Code: </p>
-            <img
-              className="gridIcon"
-              onClick={this.toggleGridView}
-              src={this.state.gridView ? tabIcon : gridIcon}
-              alt="Grid view icon"
-            />
+            {gridViewIconMarkup}
+            {tabViewIconMarkup}
+            {rawLogData ? graphViewIconMarkup : null}
           </div>
           <SourceCodeContainer
             onClick={this.handleChangeTab}
             onTabClick={this.handleFileChanged}
-            onExitButtonClick={this.handleTabExitButtonClicked}
+            onExitButtonClick={this.handleTabExitClicked}
             sourceCode={sourceCode}
             linesToHighlight={linesToHighlight}
             file={currentFile}
             allSelectedFiles={allSelectedFiles}
             tabIndex={sourceCodeTabIndex}
-            gridView={gridView}
           />
         </div>
       );
 
-    const rawLogMarkup = (
-      <RawLogContainer logData={logData}/>
-    )
+    const rawLogMarkup = <RawLogContainer logData={logData} />;
 
     const graphMarkup = (
-          <div className="graphContainer">
-            <GraphContainer/>
-          </div>
+      <div className="graphContainer">
+        <GraphContainer />
+      </div>
     );
 
-    // change to callPathContainer, sourceCodeContainer, etc? 
+    const callPathMarkup = (
+      <div className={graphView ? 'rawLogContainer' : 'exceptionContainer'}>
+        {exceptionMarkup}
+        {logMarkup}
+      </div>
+    );
+
+    // change to callPathContainer, sourceCodeContainer, etc?
     return (
       <div className="app">
         {navBarMarkup}
         <div className="container">
-          <div className={graphView ? "rawLogContainer" : "exceptionContainer"}>
-            {graphView ? rawLogMarkup : exceptionMarkup}
-          </div>
+          {graphView ? rawLogMarkup : callPathMarkup}
           <div className="sourceCode">
             {graphView ? graphMarkup : sourceCodeMarkup}
           </div>
@@ -145,7 +201,7 @@ class App extends React.PureComponent {
   }
 
   showLoggingPoint(fileName, lineNumber) {
-    console.log("show logging point App.js " + fileName + " " + lineNumber);
+    console.log('show logging point App.js ' + fileName + ' ' + lineNumber);
   }
 
   // Change to handleFileChange
@@ -189,9 +245,7 @@ class App extends React.PureComponent {
 
   handleChangeTab(tabIndex) {
     const files = [...this.state.allSelectedFiles];
-    console.log("[App.js] handleChangeTab", files);
     const fileToSet = files.find((_, index) => index === tabIndex);
-    console.log("[App.js] handleChangeTab fileToSet", fileToSet);
 
     this.setState({
       sourceCodeTabIndex: tabIndex,
@@ -199,8 +253,7 @@ class App extends React.PureComponent {
     });
   }
 
-  getLinesToHighlight() {
-    const { exceptionData, logData } = this.state;
+  getLinesToHighlight(exceptionData, logData) {
     let exceptionLineNumbers = [];
     if (exceptionData.length !== 0) {
       exceptionData.forEach(exception => {
@@ -218,16 +271,13 @@ class App extends React.PureComponent {
         });
       });
     }
-
     return [...exceptionLineNumbers, ...logLineNumbers];
   }
 
-  handleTabExitButtonClicked(fileToRemove) {
-    console.log("[App.js] handleTabExit fileToRemove: ", fileToRemove);
+  handleTabExitClicked(fileToRemove) {
     const files = [...this.state.allSelectedFiles];
 
     const filesUpdated = files.filter(file => {
-      console.log("[App.js] file.fileName", file.fileName);
       if (file.fileName !== fileToRemove) {
         return file;
       } else {
@@ -247,51 +297,75 @@ class App extends React.PureComponent {
   }
 
   async handleIssueClicked(issueTitle) {
-    console.log("issue clicked!");
+    console.log('[App.js] handleIssueClicked', issueTitle);
     const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
-    const linesToHighlight = this.getLinesToHighlight();
-
-    const graphView = issueTitle === "HADOOP-2486-with-raw-log";
+    const linesToHighlight = this.getLinesToHighlight(exception, log);
+    const rawLogData = issueTitle === 'HADOOP-2486';
+    console.log('[App.js] rawLogData', rawLogData);
 
     this.setState({
       currentIssue: issueTitle,
-      currentFile: "",
+      currentFile: '',
       allSelectedFiles: [],
       exceptionData: exception,
       logData: log,
       sourceCode,
       linesToHighlight,
-      graphView
+      rawLogData,
+      gridView: false,
+      tabView: false,
+      graphView: false
     });
   }
 
   async fetchIssues() {
     try {
-      const data = await fetch("/hello");
+      const data = await fetch('/hello');
       return data.json();
     } catch (error) {
-      console.log("Error in callApi", error);
+      console.log('Error in callApi', error);
     }
   }
 
   async fetchDocument(issueTitle) {
     try {
-      const data = await fetch("/issues/" + issueTitle);
+      const data = await fetch('/issues/' + issueTitle);
       const body = await data.text();
       return JSON.parse(body);
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   }
 
   toggleGridView() {
-    console.log(this.state.gridView);
-    const gridViewState = !this.state.gridView;
-    this.setState({ gridView: gridViewState });
+    console.log('[App.js] grid view toggled');
+    this.setState({
+      gridView: true,
+      tabView: false,
+      graphView: false
+    });
+  }
+
+  toggleTabView() {
+    console.log('[App.js] tab view toggled');
+    this.setState({
+      gridView: false,
+      tabView: true,
+      graphView: false
+    });
+  }
+
+  toggleGraphView() {
+    console.log('[App.js] graph view toggled');
+    this.setState({
+      gridView: false,
+      tabView: false,
+      graphView: true
+    });
   }
 
   handleClickOutsideSearchBox() {
-    console.log("Called!!!");
+    console.log('Called!!!');
     this.setState({ suggestions: [] });
   }
 }

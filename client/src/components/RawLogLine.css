@@ -28,13 +28,14 @@
   justify-content: center;
   color: white;
   margin: 5px;
-  border: 0px solid #00CECC;
+  border: 12.5px solid #00CECC;
   box-sizing: border-box;
   transition: all 150ms;
   margin: 0px 15px;
 }
 .checkbox--input:checked + span {
-  border-width: 12.5px;
+  width: 25px; 
+  height: 25px;
 }
 .checkbox--input:checked + span::before {
   content: 'check';
