@@ -115,7 +115,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Grid view"
-          className="gridIcon"
+          className={gridView ? "gridIcon--selected" : "gridIcon"}
           onClick={gridView ? null : this.toggleGridView}
           src={gridIcon}
           alt="Grid view"
@@ -128,7 +128,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Tab view"
-          className="tabIcon"
+          className={tabView ? "tabIcon--selected" : "tabIcon"}
           onClick={tabView ? null : this.toggleTabView}
           src={tabIcon}
           alt="Tab view"
@@ -141,7 +141,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Graph view"
-          className="graphIcon"
+          className={graphView ? "graphIcon--selected" : "graphIcon"}
           onClick={graphView ? null : this.toggleGraphView}
           src={graphIcon}
           alt="Tab view"
@@ -167,6 +167,7 @@ class App extends React.PureComponent {
             file={currentFile}
             allSelectedFiles={allSelectedFiles}
             tabIndex={sourceCodeTabIndex}
+            gridView={gridView}
           />
         </div>
       );
