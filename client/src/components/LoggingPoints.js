@@ -10,7 +10,7 @@ function LoggingPoints(props) {
   const {
     loggingPointData,
     currentFile,
-    onClick, 
+    loggingPointClicked, 
   } = props;
 
   return loggingPointData.map((element, index) => {
@@ -41,7 +41,7 @@ function LoggingPoints(props) {
           className={`LoggingPoint ${isActive ? 'LoggingPoint--active' : ''}`}
           to={`${element.lineNumber}`}
           offset={SCROLL_OFFSET_PX}
-          onClick={() => onClick(element.fileName, element.lineNumber)}
+          onClick={() => loggingPointClicked(element.fileName, element.lineNumber)}
         >
           <span className="fileName">{element.fileName}:{element.lineNumber}</span>
           <span>{element.methodName} </span>

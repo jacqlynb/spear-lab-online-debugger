@@ -39,7 +39,7 @@ class SourceCodeContainer extends React.PureComponent {
 
   scrollToCurrentLine() {
     const containerId = this.props.gridView
-      ? "containerElement" + this.props.file.fileName
+      ? "containerElement" + this.props.file.fileName + this.props.file.lineNumber
       : "containerElement";
 
     const scrollOffset = this.props.gridView
@@ -65,7 +65,7 @@ class SourceCodeContainer extends React.PureComponent {
       allSelectedFiles,
       tabIndex,
       gridView, 
-      tabView
+      // tabView
     } = this.props;
 
     const sourceCodeToRender = sourceCode.filter(elem => {

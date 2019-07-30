@@ -47,6 +47,7 @@ label {
   padding: 5px 5px;
   box-sizing: border-box;
   outline: none;
+  margin: 0;
 }
 
 .inputDropdown ul {

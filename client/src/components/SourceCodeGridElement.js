@@ -6,12 +6,17 @@ import "../containers/SourceCodeContainer.css";
 const SCROLL_OFFSET_PX_GRID = -4;
 
 class SourceCodeGridElement extends React.Component {
+  constructor(props) {
+    super(props)
+    this.scrollToTargetLine = this.scrollToTargetLine.bind(this);
+  }
+
   componentDidMount() {
     this.scrollToTargetLine();
   }
 
   scrollToTargetLine() {
-    const containerId = "containerElement" + this.props.file.fileName;
+    const containerId = "containerElement" + this.props.file.fileName + this.props.file.lineNumber;
 
     scroller.scrollTo(
       (this.props.file.lineNumber + SCROLL_OFFSET_PX_GRID).toString(),
@@ -48,8 +53,6 @@ class SourceCodeGridElement extends React.Component {
       );
     });
 
-    console.log("[SourceCodeGridElement.js] RENDERING...", file.fileName);
-
     return (
       <div className="gridElement" key={sourceCode.fileName}>
         <div className="gridElementHeader">
@@ -58,13 +61,13 @@ class SourceCodeGridElement extends React.Component {
             className="tabExitButton"
             onClick={() => onClick(sourceCode.fileName)}
           >
-            {" "}
+            {" "} 
             x
           </button>
         </div>
         <Element
           className="gridContainer"
-          id={"containerElement" + sourceCode.fileName}
+          id={"containerElement" + file.fileName + file.lineNumber}
           style={{
             position: "relative",
             height: "500px",

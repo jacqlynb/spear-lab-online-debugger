@@ -3,9 +3,31 @@
 }
 
 .rawLogLine {
+  background: rgb(241, 241, 241);
+  border-bottom: 1px solid rgb(192, 192, 192);
+  border-left: 1px solid rgb(192, 192, 192);
+  border-right: 1px solid rgb(192, 192, 192);
+  font-size: 0.7em;
+  padding: 0;
+  margin: 0;
+}
+
+.rawLogLine--checked {
   background: lightgray;
   left: 0;
   top: 0;
+  border-bottom: 1px solid rgb(192, 192, 192);
+  border-left: 1px solid rgb(192, 192, 192);
+  border-right: 1px solid rgb(192, 192, 192);
+  font-size: 0.7em;
+  padding: 0;
+  margin: 0;
+}
+
+h4 {
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgb(192, 192, 192);
+  margin: 25px 0 0 0;
 }
 
 .logLineWrapper {
@@ -28,7 +50,6 @@
   align-items: center;
   justify-content: center;
   color: white;
-  margin: 5px;
   border: 12.5px solid #00CECC;
   box-sizing: border-box;
   transition: all 150ms;
@@ -51,6 +72,11 @@
 
 .logText {
   margin-left: 10px;
+  padding-top: 0px;
+  font-size: 0.88em;
+  margin: 0;
 }
 
-
+.numberIcon circle {
+  fill: blue;
+}

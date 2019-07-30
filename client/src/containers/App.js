@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import Navbar from '../components/Navbar';
-import ExceptionContainer from '../containers/ExceptionContainer';
+import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
 import GraphContainer from '../containers/GraphContainer';
@@ -24,6 +24,7 @@ class App extends React.PureComponent {
     this.handleClickOutsideSearchBox = this.handleClickOutsideSearchBox.bind(
       this
     );
+    this.toggleDuplicates = this.toggleDuplicates.bind(this);
   }
 
   state = {
@@ -49,13 +50,13 @@ class App extends React.PureComponent {
     rawLogData: false,
     gridView: false,
     tabView: false,
-    graphView: false
+    graphView: false,
+    multipleFromSameFile: false
   };
 
   componentDidMount() {
     this.fetchIssues()
       .then(issues => {
-        console.log('[App.js] componentDidMount', issues);
         this.setState({ issues, graphView: false });
       })
       .catch(err => console.log(err));
@@ -92,7 +93,8 @@ class App extends React.PureComponent {
         <div className="exception">
           <p className="exceptionHeader">Exception: </p>
           <ExceptionContainer
-            onClick={this.handleFileChanged}
+            loggingPointClicked={this.handleFileChanged}
+            duplicatesClicked={this.toggleDuplicates}
             exceptionData={exceptionData}
             currentFile={currentFile}
           />
@@ -104,7 +106,8 @@ class App extends React.PureComponent {
         <div className="exception">
           <p className="exceptionHeader">Log: </p>
           <ExceptionContainer
-            onClick={this.handleFileChanged}
+            loggingPointClicked={this.handleFileChanged}
+            duplicatesClicked={this.toggleDuplicates}
             exceptionData={logData}
             currentFile={currentFile}
           />
@@ -115,7 +118,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Grid view"
-          className={gridView ? "gridIcon--selected" : "gridIcon"}
+          className={gridView ? 'gridIcon--selected' : 'gridIcon'}
           onClick={gridView ? null : this.toggleGridView}
           src={gridIcon}
           alt="Grid view"
@@ -128,7 +131,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Tab view"
-          className={tabView ? "tabIcon--selected" : "tabIcon"}
+          className={tabView ? 'tabIcon--selected' : 'tabIcon'}
           onClick={tabView ? null : this.toggleTabView}
           src={tabIcon}
           alt="Tab view"
@@ -141,7 +144,7 @@ class App extends React.PureComponent {
       <div>
         <img
           data-tip="Graph view"
-          className={graphView ? "graphIcon--selected" : "graphIcon"}
+          className={graphView ? 'graphIcon--selected' : 'graphIcon'}
           onClick={graphView ? null : this.toggleGraphView}
           src={graphIcon}
           alt="Tab view"
@@ -150,14 +153,18 @@ class App extends React.PureComponent {
       </div>
     );
 
+    const sourceCodeHeaderWrapper = (
+      <div className="sourceCodeHeaderWrapper">
+        {gridViewIconMarkup}
+        {tabViewIconMarkup}
+        {rawLogData ? graphViewIconMarkup : null}
+      </div>
+    );
+
     const sourceCodeMarkup =
       sourceCode.length === 0 ? null : (
         <div className="sourceCode">
-          <div className="sourceCodeHeaderWrapper">
-            {gridViewIconMarkup}
-            {tabViewIconMarkup}
-            {rawLogData ? graphViewIconMarkup : null}
-          </div>
+          {sourceCodeHeaderWrapper}
           <SourceCodeContainer
             onClick={this.handleChangeTab}
             onTabClick={this.handleFileChanged}
@@ -176,6 +183,7 @@ class App extends React.PureComponent {
 
     const graphMarkup = (
       <div className="graphContainer">
+        {sourceCodeHeaderWrapper}
         <GraphContainer />
       </div>
     );
@@ -209,13 +217,17 @@ class App extends React.PureComponent {
   handleFileChanged(fileName, lineNumber) {
     const files = [...this.state.allSelectedFiles];
 
-    const duplicateFile = files.filter(file => {
-      if (file.fileName === fileName) {
-        return file;
-      } else {
-        return null;
-      }
-    });
+    let duplicateFile = [];
+    console.log('[App.js] handleFileChanged this.state.multipleFromSameFile', this.state.multipleFromSameFile);
+    if (!this.state.multipleFromSameFile) {
+      duplicateFile = files.filter(file => {
+        if (file.fileName === fileName) {
+          return file;
+        } else {
+          return null;
+        }
+      });
+    }
 
     let tabIndex;
     let filesUpdated;
@@ -298,11 +310,9 @@ class App extends React.PureComponent {
   }
 
   async handleIssueClicked(issueTitle) {
-    console.log('[App.js] handleIssueClicked', issueTitle);
     const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
     const linesToHighlight = this.getLinesToHighlight(exception, log);
     const rawLogData = issueTitle === 'HADOOP-2486';
-    console.log('[App.js] rawLogData', rawLogData);
 
     this.setState({
       currentIssue: issueTitle,
@@ -339,7 +349,6 @@ class App extends React.PureComponent {
   }
 
   toggleGridView() {
-    console.log('[App.js] grid view toggled');
     this.setState({
       gridView: true,
       tabView: false,
@@ -348,7 +357,6 @@ class App extends React.PureComponent {
   }
 
   toggleTabView() {
-    console.log('[App.js] tab view toggled');
     this.setState({
       gridView: false,
       tabView: true,
@@ -357,7 +365,6 @@ class App extends React.PureComponent {
   }
 
   toggleGraphView() {
-    console.log('[App.js] graph view toggled');
     this.setState({
       gridView: false,
       tabView: false,
@@ -365,8 +372,13 @@ class App extends React.PureComponent {
     });
   }
 
+  toggleDuplicates() {
+    console.log('[App.js] toggleDuplicates this.state.multipleFromSameFile = ', this.state.multipleFromSameFile);
+    const duplicates = this.state.multipleFromSameFile;
+    this.setState({ multipleFromSameFile: !duplicates });
+  }
+
   handleClickOutsideSearchBox() {
-    console.log('Called!!!');
     this.setState({ suggestions: [] });
   }
 }

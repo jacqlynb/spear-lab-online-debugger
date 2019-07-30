@@ -2,12 +2,14 @@ import React from "react";
 import Callpath from "../components/CallPath.js";
 
 // TODO: convert this to a function component
+
 class ExceptionContainer extends React.PureComponent {
   render() {
     const {
-      onClick,
+      loggingPointClicked,
       exceptionData,
       currentFile,
+      duplicatesClicked,
     } = this.props;
 
     return exceptionData.map((callPathElement, index) => (
@@ -15,7 +17,8 @@ class ExceptionContainer extends React.PureComponent {
         key={index}
         callPathElement={callPathElement}
         currentFile={currentFile}
-        onClick={onClick}
+        loggingPointClicked={loggingPointClicked}
+        duplicatesClicked={duplicatesClicked}
       />
     ));
   }

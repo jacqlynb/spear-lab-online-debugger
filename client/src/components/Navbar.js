@@ -1,5 +1,5 @@
-import React from "react";
-import "./Navbar.css";
+import React from 'react';
+import './Navbar.css';
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -16,11 +16,11 @@ class Navbar extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
+    document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   handleClickOutside(event) {
@@ -35,7 +35,7 @@ class Navbar extends React.Component {
 
   onSearchTextChange(e) {
     const value = e.target.value;
-    const regex = new RegExp(`${value}`, "i");
+    const regex = new RegExp(`${value}`, 'i');
     const issues = [...this.props.issues];
     const suggestions =
       value.length > 0
@@ -58,16 +58,20 @@ class Navbar extends React.Component {
       suggestions.length > 0
         ? suggestions.map((suggestion, index) => {
             return (
-              <li key={index} onClick={() => this.handleDropDownIssueClick(suggestion)}>
+              <li
+                key={index}
+                onClick={() => this.handleDropDownIssueClick(suggestion)}
+              >
                 {suggestion}
               </li>
             );
           })
         : null;
 
-    const searchBoxValue = searchInProgress
-      ? null 
-      : ""
+    let searchBoxValue;
+    if (!searchInProgress) {
+      searchBoxValue = '';
+    }
 
     return (
       <div className="navbar">
@@ -79,7 +83,7 @@ class Navbar extends React.Component {
                 type="text"
                 id="targetIssue"
                 onChange={this.onSearchTextChange}
-                value={searchBoxValue || ''}
+                value={searchBoxValue}
                 autoComplete="off"
               />
               <ul>{suggestionListMarkup}</ul>
