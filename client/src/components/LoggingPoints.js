@@ -41,7 +41,7 @@ function LoggingPoints(props) {
           className={`LoggingPoint ${isActive ? 'LoggingPoint--active' : ''}`}
           to={`${element.lineNumber}`}
           offset={SCROLL_OFFSET_PX}
-          onClick={() => loggingPointClicked(element.fileName, element.lineNumber)}
+          onClick={() => loggingPointClicked(element.fileName, element.lineNumber, element.methodName)}
         >
           <span className="fileName">{element.fileName}:{element.lineNumber}</span>
           <span>{element.methodName} </span>

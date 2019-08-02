@@ -58,11 +58,3 @@ div.bar {
   height: 50px;
   background-color: lightsteelblue;
 }
-
-circle {
-  fill: lightgreen;
-}
-
-circle.text {
-  fill: black;
-}

@@ -1,5 +1,5 @@
 import React from 'react';
-import draw from '../helpers/helpers.js';
+import { draw } from '../helpers/helpers.js';
 
 import './GraphContainer.css';
 

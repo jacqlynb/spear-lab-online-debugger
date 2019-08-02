@@ -65,7 +65,6 @@ class SourceCodeContainer extends React.PureComponent {
       allSelectedFiles,
       tabIndex,
       gridView, 
-      // tabView
     } = this.props;
 
     const sourceCodeToRender = sourceCode.filter(elem => {

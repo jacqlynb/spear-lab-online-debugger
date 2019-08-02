@@ -59,32 +59,31 @@ class RawLogContainer extends React.Component {
     } else {
       currentCheckedItems.push(i);
     }
-    
+
     this.setState({
       checkBoxItems: currentCheckedItems
-    })
+    });
   }
 
   render() {
     const rawLogMarkup = this.state.logItems.map((logItem, i) => {
-      return ( 
-      <RawLogLine
-              key={logItem.key}
-              name={logItem.name}
-              checked={this.state.checkBoxItems.includes(i)}
-              changed={() => this.handleRawLogChanged(i)}
-      />
-      )
+      return (
+        <RawLogLine
+          key={logItem.key}
+          name={logItem.name}
+          checked={this.state.checkBoxItems.includes(i)}
+          changed={() => this.handleRawLogChanged(i)}
+          rawLogNumber={i + 1}
+        />
+      );
     });
 
-    return this.state.logItems
-      ? (
+    return this.state.logItems ? (
       <div className="rawLogContainer">
         <h4>Select two raw log lines to view path in between:</h4>
         {rawLogMarkup}
       </div>
-    )
-    : null;
+    ) : null;
   }
 
   async fetchLogData() {

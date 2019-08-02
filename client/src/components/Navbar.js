@@ -1,5 +1,6 @@
 import React from 'react';
 import './Navbar.css';
+import SwitchButton from './Switch.js'
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -78,6 +79,7 @@ class Navbar extends React.Component {
         <ul className="navigation" role="navigation">
           <li className="title">working title</li>
           <li className="searchbar">
+          <li><SwitchButton/></li>
             <div className="inputDropdown" ref={this.setWrapperRef}>
               <input
                 type="text"
@@ -96,4 +98,7 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar;
+export {
+  Navbar,
+  React
+}

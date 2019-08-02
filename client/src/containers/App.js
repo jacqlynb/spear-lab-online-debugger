@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import Navbar from '../components/Navbar';
+import { Navbar } from '../components/Navbar';
 import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
@@ -36,12 +36,14 @@ class App extends React.PureComponent {
     currentIssue: null,
     currentFile: {
       lineNumber: null,
-      fileName: null
+      fileName: null,
+      methodName: null
     },
     allSelectedFiles: [
       {
         lineNumber: null,
-        fileName: null
+        fileName: null,
+        methodName: null
       }
     ],
     sourceCodeTabIndex: 0,
@@ -184,7 +186,7 @@ class App extends React.PureComponent {
     const graphMarkup = (
       <div className="graphContainer">
         {sourceCodeHeaderWrapper}
-        <GraphContainer />
+        <GraphContainer allSelectedFiles={allSelectedFiles} />
       </div>
     );
 
@@ -214,11 +216,10 @@ class App extends React.PureComponent {
   }
 
   // Change to handleFileChange
-  handleFileChanged(fileName, lineNumber) {
+  handleFileChanged(fileName, lineNumber, methodName) {
     const files = [...this.state.allSelectedFiles];
 
     let duplicateFile = [];
-    console.log('[App.js] handleFileChanged this.state.multipleFromSameFile', this.state.multipleFromSameFile);
     if (!this.state.multipleFromSameFile) {
       duplicateFile = files.filter(file => {
         if (file.fileName === fileName) {
@@ -234,7 +235,7 @@ class App extends React.PureComponent {
 
     // refactor later... a little confusing
     if (duplicateFile.length === 0) {
-      files.push({ fileName, lineNumber });
+      files.push({ fileName, lineNumber, methodName });
       filesUpdated = files;
       tabIndex = files.length - 1;
     } else {
@@ -243,13 +244,14 @@ class App extends React.PureComponent {
         if (file.fileName === fileName) {
           tabIndex = index;
           newFile.lineNumber = lineNumber;
+          newFile.methodName = methodName;
         }
         return newFile;
       });
     }
 
     this.setState({
-      currentFile: { fileName, lineNumber },
+      currentFile: { fileName, lineNumber, methodName },
       allSelectedFiles: filesUpdated,
       sourceCodeTabIndex: tabIndex
     });
@@ -373,7 +375,6 @@ class App extends React.PureComponent {
   }
 
   toggleDuplicates() {
-    console.log('[App.js] toggleDuplicates this.state.multipleFromSameFile = ', this.state.multipleFromSameFile);
     const duplicates = this.state.multipleFromSameFile;
     this.setState({ multipleFromSameFile: !duplicates });
   }
