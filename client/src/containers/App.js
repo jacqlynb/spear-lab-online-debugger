@@ -5,6 +5,7 @@ import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
 import GraphContainer from '../containers/GraphContainer';
+import TestGraph from '../components/TestGraph';
 import './App.css';
 
 const gridIcon = require('../images/view-grid.svg');
@@ -187,6 +188,7 @@ class App extends React.PureComponent {
       <div className="graphContainer">
         {sourceCodeHeaderWrapper}
         <GraphContainer allSelectedFiles={allSelectedFiles} />
+        <TestGraph />
       </div>
     );
 

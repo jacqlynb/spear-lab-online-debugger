@@ -9,7 +9,6 @@ class Callpath extends React.Component {
 
     return (
       <div className="CallPath">
-        <button onClick={() => duplicatesClicked()}>Allow duplicates</button>
         <div className="loggingPointsContainer">
           <LoggingPoints
             loggingPointData={callPathElement}

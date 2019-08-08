@@ -1,18 +1,11 @@
-/* .graph {
-  background-color: white;
-  width: 100%;
+
+.graphContainer {
+  z-index: -1;
 }
 
-.graph div {
-  font: 10px sans-serif;
-  background-color: steelblue;
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
-  color: white;
-} */
-h1 {
-  color: blue;
+.testGraph {
+  z-index: -1;
+  background: blue;
 }
 
 path {
@@ -34,12 +27,24 @@ text {
   fill: steelblue;
 }
 
-rect:hover {
+/* rect:hover {
   -moz-transition: all 0.5s; 
   -o-transition: all 0.5s; 
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
   fill: orange;
+} */
+
+
+.toolTip {
+  background: lightblue;
+  position: absolute;
+  z-index: 5;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  padding: 2px;
+  font-size: 0.75em;
 }
 
 .chart text {
