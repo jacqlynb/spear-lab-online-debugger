@@ -6,11 +6,9 @@ class RawLogContainer extends React.Component {
   constructor(props) {
     super(props);
     this.fetchLogData = this.fetchLogData.bind(this);
-    this.handleRawLogChanged = this.handleRawLogChanged.bind(this);
 
     this.state = {
       logData: [],
-      checkBoxItems: [],
       checkBoxesFull: false,
       logItems: []
     };
@@ -48,31 +46,17 @@ class RawLogContainer extends React.Component {
       .catch(err => console.log(err));
   }
 
-  handleRawLogChanged(i) {
-    const currentCheckedItems = [...this.state.checkBoxItems];
-
-    if (currentCheckedItems.includes(i)) {
-      currentCheckedItems.splice(currentCheckedItems.indexOf(i), 1);
-    } else if (currentCheckedItems.length >= 2) {
-      currentCheckedItems.pop();
-      currentCheckedItems.push(i);
-    } else {
-      currentCheckedItems.push(i);
-    }
-
-    this.setState({
-      checkBoxItems: currentCheckedItems
-    });
-  }
-
   render() {
+    const { checkBoxItems } = this.props;
+    console.log('[RawLogContainer] checkBoxItems', checkBoxItems);
+
     const rawLogMarkup = this.state.logItems.map((logItem, i) => {
       return (
         <RawLogLine
           key={logItem.key}
           name={logItem.name}
-          checked={this.state.checkBoxItems.includes(i)}
-          changed={() => this.handleRawLogChanged(i)}
+          checked={checkBoxItems.includes(i)}
+          changed={() => this.props.change(i)}
           rawLogNumber={i + 1}
         />
       );

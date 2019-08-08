@@ -4,8 +4,6 @@ const port = process.env.PORT || 5000;
 const ObjectId = require('mongodb').ObjectID;
 const schema = require("./src/models/schema");
 const Exception = schema.Exception;
-const parser = require("./source-code-parser");
-const parse = parser.parse;
 require("./src/db/mongoose");
 
 
@@ -27,10 +25,9 @@ app.get("/hello", (req, res) => {
 
 app.get("/issues/:title", (req, res) => {
   console.log(req.params);
-  parse();
   Exception.findOne({ title: req.params.title })
     .then(data => {
-      res.status(200).send(data);
+        res.status(200).send(data);
     })
     .catch(error => res.status(404).send(error));
 });
@@ -38,7 +35,6 @@ app.get("/issues/:title", (req, res) => {
 app.get("/2486", (req, res) => {
   Exception.findOne({ _id: ObjectId("5d24dfc74fbe7df3e63866a0") })
     .then(data => {
-      console.log(data)
       res.status(200).send(data);
     })
     .catch(err => res.status(404).send(err));
@@ -53,6 +49,27 @@ app.get("/2486-with-levels", (req, res) => {
 });
 
 app.listen(port, () => console.log(`Listening on ${port}`));
+
+function constructLogHierarchy1(data) {
+  console.log('called constructLogHierarchy')
+  let log = {}
+  log.id = 'log';
+  log.children = []
+  data.log.map((element, i) => {
+    log.children[i] = {}
+    log.children[i].id = "callpath"
+    log.children[i].children = []
+    element.map(line => {
+      log.children[i].children.push(line);
+    });
+  });
+  console.log('log', log)
+
+  return log
+
+}
+
+
 
 // ***** Promise.all pattern *****
 // Promise.all([findException, findSourceCode]).then(value => {

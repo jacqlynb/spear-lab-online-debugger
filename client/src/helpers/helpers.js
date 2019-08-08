@@ -12,6 +12,25 @@ async function fetchLogData() {
   }
 }
 
+function constructLogHierarchy(data) {
+  console.log('called constructLogHierarchy');
+  let log = {};
+  log.id = 'log';
+  log.children = [];
+  console.log('log', log);
+  data.map((element, i) => {
+    log.children[i] = {};
+    log.children[i].id = 'callpath';
+    log.children[i].children = [];
+    element.map(line => {
+      log.children[i].children.push(line);
+    });
+  });
+  console.log('log', log);
+
+  return log;
+}
+
 // async function draw(props) {
 //   const { allSelectedFiles } = props;
 //   const data = await fetchLogData();
@@ -51,7 +70,7 @@ async function fetchLogData() {
 //     .enter()
 //     .append('path')
 //     .attr('d', linkPathGenerator);
-    
+
 //   const rects = g
 //     .selectAll('rect')
 //     .data(treeData)
@@ -76,7 +95,7 @@ async function fetchLogData() {
 //       }
 //     })
 //     .attr('font-size', '0.8em')
-    
+
 //   g.selectAll('text').each(function(d, i) {
 //     treeData[i].bb = this.getBBox();
 //   });
@@ -103,30 +122,31 @@ async function fetchLogData() {
 //     })/* .on('mouseover', (d) => {
 //       div.transition().duration(200).style("opacity", .9);
 //       div.html(`File name: ReduceTask.java`)
-//                 .style("left", (d3.event.pageX) + "px")		
-//                 .style("top", (d3.event.pageY - 28) + "px");	
+//                 .style("left", (d3.event.pageX) + "px")
+//                 .style("top", (d3.event.pageY - 28) + "px");
 //     })
 
 //     div.style("width", "30px").style("height", "30px").style("background", "black").style("left", "100px").style("top", "100px"); */
 // }
 
-async function renderRawLogNumberIcon(props) {
-  const { rawLogNumber } = props;
-  console.log('.rawLogNumber' + rawLogNumber)
-  const svg = d3.select('.rawLogNumber' + rawLogNumber)
+async function renderRawLogNumberIcon(num) {
+  const svg = d3
+    .select('.rawLogNumber' + num)
     .attr('width', 25)
     .attr('height', 25);
 
-  svg.append('circle')
-  .attr("r", 10)
-  .attr("cx", 12.5)
-  .attr("cy", 12.5)
-  .attr("fill", "white")
-  .attr("stroke", "black")
-  .attr("stroke-width", 2)
+  svg
+    .append('circle')
+    .attr('r', 10)
+    .attr('cx', 12.5)
+    .attr('cy', 12.5)
+    .attr('fill', 'white')
+    .attr('stroke', 'black')
+    .attr('stroke-width', 2);
 
-  svg.append('text')
-    .text(rawLogNumber)
+  svg
+    .append('text')
+    .text(num)
     .attr('x', 12.5)
     .attr('y', 18)
     .attr('text-anchor', 'middle')
@@ -134,7 +154,4 @@ async function renderRawLogNumberIcon(props) {
     .attr('font-weight', 'bold');
 }
 
-export {
-  // draw,
-  renderRawLogNumberIcon
-};
+export { constructLogHierarchy, renderRawLogNumberIcon };

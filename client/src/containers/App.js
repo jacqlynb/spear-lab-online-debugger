@@ -5,7 +5,7 @@ import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
 import GraphContainer from '../containers/GraphContainer';
-import TestGraph from '../components/TestGraph';
+import { constructLogHierarchy } from '../helpers/helpers';
 import './App.css';
 
 const gridIcon = require('../images/view-grid.svg');
@@ -26,11 +26,13 @@ class App extends React.PureComponent {
       this
     );
     this.toggleDuplicates = this.toggleDuplicates.bind(this);
+    this.handleRawLogChanged = this.handleRawLogChanged.bind(this);
   }
 
   state = {
     exceptionData: [],
     logData: [],
+    logDataHierarchical: [],
     sourceCode: [],
     linesToHighlight: [],
     issues: [],
@@ -54,7 +56,8 @@ class App extends React.PureComponent {
     gridView: false,
     tabView: false,
     graphView: false,
-    multipleFromSameFile: false
+    multipleFromSameFile: false,
+    checkBoxItems: []
   };
 
   componentDidMount() {
@@ -70,6 +73,7 @@ class App extends React.PureComponent {
       issues,
       exceptionData,
       logData,
+      logDataHierarchical,
       sourceCode,
       linesToHighlight,
       currentFile,
@@ -79,7 +83,8 @@ class App extends React.PureComponent {
       tabView,
       graphView,
       searchSuggestions,
-      rawLogData
+      rawLogData,
+      checkBoxItems
     } = this.state;
 
     const navBarMarkup = (
@@ -182,13 +187,21 @@ class App extends React.PureComponent {
         </div>
       );
 
-    const rawLogMarkup = <RawLogContainer logData={logData} />;
+    const rawLogMarkup = (
+      <RawLogContainer
+        change={this.handleRawLogChanged}
+        checkBoxItems={checkBoxItems}
+        logData={logData}
+      />
+    );
 
     const graphMarkup = (
       <div className="graphContainer">
         {sourceCodeHeaderWrapper}
-        <GraphContainer allSelectedFiles={allSelectedFiles} />
-        <TestGraph />
+        <GraphContainer
+          allSelectedFiles={allSelectedFiles}
+          logData={logDataHierarchical}
+        />
       </div>
     );
 
@@ -211,10 +224,6 @@ class App extends React.PureComponent {
         </div>
       </div>
     );
-  }
-
-  showLoggingPoint(fileName, lineNumber) {
-    console.log('show logging point App.js ' + fileName + ' ' + lineNumber);
   }
 
   // Change to handleFileChange
@@ -318,12 +327,18 @@ class App extends React.PureComponent {
     const linesToHighlight = this.getLinesToHighlight(exception, log);
     const rawLogData = issueTitle === 'HADOOP-2486';
 
+    let logDataHierarchical = [];
+    if (log.length !== 0) {
+      logDataHierarchical = constructLogHierarchy(log);
+    }
+
     this.setState({
       currentIssue: issueTitle,
       currentFile: '',
       allSelectedFiles: [],
       exceptionData: exception,
       logData: log,
+      logDataHierarchical,
       sourceCode,
       linesToHighlight,
       rawLogData,
@@ -383,6 +398,26 @@ class App extends React.PureComponent {
 
   handleClickOutsideSearchBox() {
     this.setState({ suggestions: [] });
+  }
+
+  handleRawLogChanged(item) {
+    console.log('handleRawLogChanged item', item)
+    const currentCheckedItems = [...this.state.checkBoxItems];
+    console.log('[App.js] currentCheckedItems', currentCheckedItems);
+
+    if (currentCheckedItems.includes(item)) {
+      console.log('item already included')
+      currentCheckedItems.splice(currentCheckedItems.indexOf(item), 1);
+    } else if (currentCheckedItems.length >= 2) {
+      console.log('checkbox array full')
+      currentCheckedItems.pop();
+      currentCheckedItems.push(item);
+    } else {
+      console.log('adding item to array');
+      currentCheckedItems.push(item);
+    }
+
+    this.setState({ checkBoxItems: currentCheckedItems });
   }
 }
 

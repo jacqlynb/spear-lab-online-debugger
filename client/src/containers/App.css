@@ -48,11 +48,11 @@
 }
 
 .rawLogContainer {
-  flex: 18;
+  flex: 15;
   margin-left: 20px;
   margin-top: 65px;
+  margin-right: 10px;
 }
-
 
 .graphContainer {
   flex: 2;

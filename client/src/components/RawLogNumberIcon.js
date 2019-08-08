@@ -4,7 +4,7 @@ import './RawLogNumberIcon.css';
 
 class RawLogNumberIcon extends React.Component {
   componentDidMount() {
-    renderRawLogNumberIcon(this.props)
+    renderRawLogNumberIcon(this.props.rawLogNumber);
   }
 
   render() {
