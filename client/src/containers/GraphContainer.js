@@ -36,13 +36,26 @@ class GraphContainer extends React.Component {
   }
 
   render() {
-    
-    const data = this.props.logData
-    console.log('[GraphContainer.js] this.props.logData', this.props.logData);
+    const { allSelectedFiles, logData, checkBoxItems } = this.props;
 
-    const { allSelectedFiles } = this.props;
-    // const data = this.state.logData;
+    let numCallPaths, startingCallPath;
+    let allCallPaths = [];
+
+    if (checkBoxItems.length === 2) {
+      let checkBoxItemsSorted = checkBoxItems.sort((a, b) => a - b)
+      numCallPaths = parseInt(checkBoxItemsSorted[1]) - parseInt(checkBoxItemsSorted[0]);
+      startingCallPath = checkBoxItemsSorted[0];
+      for (let i = startingCallPath; i < startingCallPath + numCallPaths; i++) {
+        allCallPaths.push(i);
+      }
+    }
+
+    // target svg element 
     const svg = d3.select('.graph');
+
+    // remove svg elements for component re-render
+    svg.selectAll('*').remove();
+
     const width = 700;
     const height = 500;
     const margin = { top: 0, bottom: 0, right: 100, left: 10 };
@@ -51,7 +64,7 @@ class GraphContainer extends React.Component {
     const treeLayout = d3.tree().size([innerHeight, innerWidth]);
 
     const zoomG = svg
-      .attr('width', width)
+      .attr('width', "100%")
       .attr('height', height)
       .append('g');
 
@@ -65,8 +78,7 @@ class GraphContainer extends React.Component {
       })
     );
 
-    const root = d3.hierarchy(data);
-    console.log('root', root)
+    const root = d3.hierarchy(logData);
     const links = treeLayout(root).links();
     const linkPathGenerator = d3
       .linkHorizontal()
@@ -78,7 +90,25 @@ class GraphContainer extends React.Component {
       .data(links)
       .enter()
       .append('path')
-      .attr('d', linkPathGenerator);
+      .attr('d', linkPathGenerator)
+      .style('stroke', d => {
+        let stroke = 'rgb(175, 174, 174)';
+        allCallPaths.forEach(callPath => {
+          if (d.target.data.callPathIDs && d.target.data.callPathIDs.includes(callPath)) {
+            stroke = 'blue';
+          }
+        });
+        return stroke;
+      })
+      .style("stroke-dasharray", d => {
+        let dashed = ("4, 4");
+        allCallPaths.forEach(callPath => {
+          if (d.target.data.callPathIDs && d.target.data.callPathIDs.includes(callPath)) {
+            dashed = 'null';
+          }
+        });
+        return dashed;
+      });
 
     const rects = g
       .selectAll('rect')
@@ -117,7 +147,7 @@ class GraphContainer extends React.Component {
     rects
       .attr('x', d => {
         if (d.children && d.children.length != 1) {
-          return d.y - d.bb.width / 2;
+          return (d.y - d.bb.width / 2) ;
         } else {
           return d.y;
         }
@@ -129,8 +159,8 @@ class GraphContainer extends React.Component {
         let fill = 'white';
         allSelectedFiles.forEach(file => {
           if (
-            file.lineNumber === d.data.data.lineNumber &&
-            file.methodName === d.data.data.methodName
+            file.lineNumber === d.data.lineNumber &&
+            file.methodName === d.data.methodName
           ) {
             fill = 'yellow';
           }
@@ -143,7 +173,6 @@ class GraphContainer extends React.Component {
           .duration(200)
           .style('opacity', 0.9);
         div
-          // .html(d.data.data.methodName)
           .html('filename: ' + d.data.fileName)
           .style('left', d3.event.pageX - 15 + 'px')
           .style('top', d3.event.pageY - 28 + 'px');

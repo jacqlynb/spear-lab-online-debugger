@@ -201,6 +201,7 @@ class App extends React.PureComponent {
         <GraphContainer
           allSelectedFiles={allSelectedFiles}
           logData={logDataHierarchical}
+          checkBoxItems={checkBoxItems}
         />
       </div>
     );

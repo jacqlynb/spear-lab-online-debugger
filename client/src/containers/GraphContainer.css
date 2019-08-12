@@ -10,7 +10,6 @@
 
 path {
   fill: none;
-  stroke: #57bdc3;;
 }
 
 text {
@@ -21,10 +20,6 @@ text {
      1px -1px 3px white,
      1px  1px 3px white;
   pointer-events: none;
-}
-
-.chart rect {
-  fill: steelblue;
 }
 
 /* rect:hover {
@@ -46,19 +41,4 @@ text {
   font-size: 0.75em;
 }
 
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
 
-.chart p {
-  color: black;
-}
-
-div.bar {
-  display: inline-block;
-  width: 20px;
-  height: 50px;
-  background-color: lightsteelblue;
-}
