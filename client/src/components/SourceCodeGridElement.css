@@ -1,0 +1,29 @@
+.element {
+  box-shadow: inset 0px 2px 5px rgb(226, 226, 226);
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #ededed;
+  padding-top: 10px;
+  padding-left: 15px;
+  margin: 0px 15px 0px 15px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.gridElementHeader {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  background: rgb(128, 128, 139);
+  color: white;
+  margin: 0 15px 0 0;
+  padding: 0 7px;
+}
+
+.gridElementHeader h4 {
+  padding: 5px 0;
+  margin: 0;
+}

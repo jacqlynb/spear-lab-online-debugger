@@ -155,8 +155,17 @@ class SourceCodeContainer extends React.PureComponent {
       blankSpace.push(<br key={i} />);
     }
 
+    let gridClass = null;
+    if (allSelectedFiles.length === 1) {
+      gridClass = 'sourceCodeGrid-1';
+    } else if (allSelectedFiles.length === 2) {
+      gridClass = 'sourceCodeGrid-2';
+    } else {
+      gridClass = 'sourceCodeGrid';
+    }
+
     const sourceCodeMarkup = gridView ? (
-      <div className="sourceCodeGrid">{gridMarkup}</div>
+      <div className={gridClass}>{gridMarkup}</div>
     ) : (
       <div>
         {tabsMarkup}

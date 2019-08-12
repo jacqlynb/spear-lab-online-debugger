@@ -16,20 +16,6 @@
   border-bottom: 1px solid white;
 }
 
-.element {
-  box-shadow: inset 0px 2px 5px rgb(226, 226, 226);
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 14px;
-  background-color: #ededed; 
-  padding-top: 10px;
-  padding-left: 15px;
-  margin: 0px 15px 0px 15px;
-  overflow-y: auto;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
 .active {
 	color:red !important;
 }
@@ -46,6 +32,7 @@
   justify-self: center;
 }
 
+/* refactor using classNames!!! */
 .sourceCodeGrid {
   display: grid;
   grid-template-columns: 50% 50%;
@@ -56,20 +43,24 @@
   margin-left: 15px;
 }
 
-.gridElementHeader {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  background: rgb(128, 128, 139);
-  color: white;
-  margin: 0 15px 0 0;
-  padding: 0 7px;
+.sourceCodeGrid-1 {
+  display: grid;
+  grid-auto-columns: auto;
+  grid-auto-rows: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 15px;
 }
 
-.gridElementHeader h4 {
-  padding: 5px 0;
-  margin: 0;
+.sourceCodeGrid-2 {
+  display: grid;
+  grid-auto-columns: auto;
+  grid-auto-rows: 280px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 15px;
 }
 
 .gridContainer {
@@ -80,34 +71,3 @@
   background: rgb(245, 245, 245);
   margin-bottom: 15px;
 }
-
-/* 
-.gridElement {
-  background: lightblue;
-}
-
-.sourceCodeGrid {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-auto-rows: 250px;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 12px;
-  border: 1px solid lightgray;
-  height: 250px;
-  background: lightyellow;
-  width: inherit;
-}
-
-.gridContainer {
-  border: 1px solid lightgray;
-  background-color: lightcyan;
-  overflow: auto;
-  max-height: 250px;
-}
-
-.gridElementHeader {
-  background: lightslategray;
-  font-size: 14px;
-  padding: 5px 0px
-} */

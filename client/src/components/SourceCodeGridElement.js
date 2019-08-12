@@ -1,13 +1,14 @@
-import React from "react";
-import { Element, scroller } from "react-scroll";
-import CodeLine from "./CodeLine";
-import "../containers/SourceCodeContainer.css";
+import React from 'react';
+import { Element, scroller } from 'react-scroll';
+import CodeLine from './CodeLine';
+import '../containers/SourceCodeContainer.css';
+import './SourceCodeGridElement.css';
 
 const SCROLL_OFFSET_PX_GRID = -4;
 
 class SourceCodeGridElement extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.scrollToTargetLine = this.scrollToTargetLine.bind(this);
   }
 
@@ -16,7 +17,10 @@ class SourceCodeGridElement extends React.Component {
   }
 
   scrollToTargetLine() {
-    const containerId = "containerElement" + this.props.file.fileName + this.props.file.lineNumber;
+    const containerId =
+      'containerElement' +
+      this.props.file.fileName +
+      this.props.file.lineNumber;
 
     scroller.scrollTo(
       (this.props.file.lineNumber + SCROLL_OFFSET_PX_GRID).toString(),
@@ -34,12 +38,7 @@ class SourceCodeGridElement extends React.Component {
   }
 
   render() {
-    const {
-      file,
-      sourceCode,
-      linesToHighlight,
-      onClick
-    } = this.props;
+    const { file, sourceCode, linesToHighlight, onClick } = this.props;
 
     const sourceCodeMarkup = sourceCode.codeLines.map(line => {
       return (
@@ -61,18 +60,18 @@ class SourceCodeGridElement extends React.Component {
             className="tabExitButton"
             onClick={() => onClick(sourceCode.fileName)}
           >
-            {" "} 
+            {' '}
             x
           </button>
         </div>
         <Element
           className="gridContainer"
-          id={"containerElement" + file.fileName + file.lineNumber}
+          id={'containerElement' + file.fileName + file.lineNumber}
           style={{
-            position: "relative",
-            height: "500px",
-            overflow: "auto",
-            marginBottom: "100px"
+            position: 'relative',
+            height: '500px',
+            overflow: 'auto',
+            marginBottom: '100px'
           }}
         >
           {sourceCodeMarkup}
