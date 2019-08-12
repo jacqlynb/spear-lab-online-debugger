@@ -65,8 +65,7 @@ function constructLogHierarchy1(data) {
   });
   console.log('log', log)
 
-  return log
-
+  return log;
 }
 
 

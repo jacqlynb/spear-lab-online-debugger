@@ -12,122 +12,50 @@ async function fetchLogData() {
   }
 }
 
+// refactor
 function constructLogHierarchy(data) {
-  console.log('called constructLogHierarchy');
+
+  const callPathElements = [];
+
+  data.forEach((callPath, i) => {
+    callPath.forEach(element => {
+      let currentElement;
+      let duplicateItem = false;
+
+      // search for element already in callPathElements array
+      callPathElements.forEach(item => {
+        // if the item is a duplicate, callPathIDs array is already created, so just push element index
+        if (item.lineNumber === element.lineNumber && item.methodName === element.methodName) {
+          currentElement = callPathElements[callPathElements.indexOf(item)];
+          currentElement.callPathIDs.push(i);
+          duplicateItem = true;
+        } 
+      });
+
+      // if the item was not a duplicate, create callPathIDs attribute (array) and push element index
+      if (!duplicateItem) {
+        callPathElements.push(element);
+        currentElement = callPathElements[callPathElements.indexOf(element)];
+        currentElement.callPathIDs = [];
+        currentElement.callPathIDs.push(i);
+      }
+    });
+  });
+
+  console.log('[helpers.js] allCallPathElements', callPathElements);
+
+  // contruct log hierarchy
   let log = {};
   log.id = 'log';
   log.children = [];
   console.log('log', log);
-  data.map((element, i) => {
-    log.children[i] = {};
-    log.children[i].id = 'callpath';
-    log.children[i].children = [];
-    element.map(line => {
-      log.children[i].children.push(line);
-    });
+  callPathElements.map((element, i) => {
+    log.children.push(element)
   });
   console.log('log', log);
 
   return log;
 }
-
-// async function draw(props) {
-//   const { allSelectedFiles } = props;
-//   const data = await fetchLogData();
-//   const svg = d3.select('.graph');
-//   const width = 700;
-//   const height = 200;
-//   const margin = { top: 0, bottom: 0, right: 100, left: 10 };
-//   const innerWidth = width - margin.left - margin.right;
-//   const innerHeight = height - margin.top - margin.bottom;
-//   const treeLayout = d3.tree().size([innerHeight, innerWidth]);
-
-//   const zoomG = svg
-//     .attr('width', width)
-//     .attr('height', height)
-//     .append('g');
-
-//   const g = zoomG
-//     .append('g')
-//     .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-//   svg.call(
-//     d3.zoom().on('zoom', () => {
-//       zoomG.attr('transform', d3.event.transform);
-//     })
-//   );
-
-//   const root = d3.hierarchy(data);
-//   const links = treeLayout(root).links();
-//   const linkPathGenerator = d3
-//     .linkHorizontal()
-//     .x(d => d.y)
-//     .y(d => d.x);
-//   const treeData = root.descendants();
-
-//   g.selectAll('path')
-//     .data(links)
-//     .enter()
-//     .append('path')
-//     .attr('d', linkPathGenerator);
-
-//   const rects = g
-//     .selectAll('rect')
-//     .data(treeData)
-//     .enter()
-//     .append('rect');
-
-//   g.selectAll('text')
-//     .data(treeData)
-//     .enter()
-//     .append('text')
-//     .attr('x', d => d.y)
-//     .attr('y', d => d.x)
-//     .attr('text-anchor', d =>
-//       d.children && d.children.length !== 1 ? 'middle' : 'start'
-//     )
-//     .attr('dy', '0.32em')
-//     .text(d => {
-//       if (d.data.data.lineNumber && d.data.data.methodName) {
-//         return d.data.data.lineNumber + ':' + d.data.data.methodName;
-//       } else {
-//         return d.data.data.id;
-//       }
-//     })
-//     .attr('font-size', '0.8em')
-
-//   g.selectAll('text').each(function(d, i) {
-//     treeData[i].bb = this.getBBox();
-//   });
-
-//   rects
-//     .attr('x', d => {
-//       if (d.children && d.children.length != 1) {
-//         return d.y - d.bb.width / 2;
-//       } else {
-//         return d.y;
-//       }
-//     })
-//     .attr('y', d => d.x - 7)
-//     .attr('width', d => (d.bb.width + 2))
-//     .attr('height', d => (d.bb.height + 2))
-//     .attr('fill', d => {
-//       let fill = 'white';
-//       allSelectedFiles.forEach(file => {
-//         if (file.lineNumber === d.data.data.lineNumber && file.methodName === d.data.data.methodName) {
-//           fill = 'yellow';
-//         }
-//       });
-//       return fill;
-//     })/* .on('mouseover', (d) => {
-//       div.transition().duration(200).style("opacity", .9);
-//       div.html(`File name: ReduceTask.java`)
-//                 .style("left", (d3.event.pageX) + "px")
-//                 .style("top", (d3.event.pageY - 28) + "px");
-//     })
-
-//     div.style("width", "30px").style("height", "30px").style("background", "black").style("left", "100px").style("top", "100px"); */
-// }
 
 async function renderRawLogNumberIcon(num) {
   const svg = d3
