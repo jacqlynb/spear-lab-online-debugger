@@ -1,16 +1,5 @@
-import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import '../containers/GraphContainer.css';
-
-async function fetchLogData() {
-  try {
-    const data = await fetch('/2486-with-levels');
-    const body = await data.text();
-    return JSON.parse(body);
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 // refactor
 function constructLogHierarchy(data) {
@@ -49,10 +38,27 @@ function constructLogHierarchy(data) {
   log.id = 'log';
   log.children = [];
   console.log('log', log);
-  callPathElements.map((element, i) => {
+  callPathElements.forEach((element, i) => {
     log.children.push(element)
   });
   console.log('log', log);
+
+  return log;
+}
+
+function constructLogHierarchyAllPaths(data) {
+  console.log('constructLogHierarchyAllPaths data', data);
+  let log = {};
+  log.id = 'log';
+  log.children = [];
+  data.forEach((callPath, i) => {
+    log.children.push({id: i + 1});
+    log.children[i].children = [];
+    callPath.forEach((element) => {
+      log.children[i].children.push(element);
+    });
+  });
+  console.log('log all paths', log);
 
   return log;
 }
@@ -82,4 +88,4 @@ async function renderRawLogNumberIcon(num) {
     .attr('font-weight', 'bold');
 }
 
-export { constructLogHierarchy, renderRawLogNumberIcon };
+export { constructLogHierarchy, renderRawLogNumberIcon, constructLogHierarchyAllPaths };
