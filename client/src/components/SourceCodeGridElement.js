@@ -4,6 +4,7 @@ import CodeLine from './CodeLine';
 import '../containers/SourceCodeContainer.css';
 import './SourceCodeGridElement.css';
 
+const exitButton = require('../images/close-circle-outline.png');
 const SCROLL_OFFSET_PX_GRID = -4;
 
 class SourceCodeGridElement extends React.Component {
@@ -38,7 +39,12 @@ class SourceCodeGridElement extends React.Component {
   }
 
   render() {
-    const { file, sourceCode, linesToHighlight, onClick } = this.props;
+    const {
+      file,
+      sourceCode,
+      linesToHighlight,
+      onExitButtonClick
+    } = this.props;
 
     const sourceCodeMarkup = sourceCode.codeLines.map(line => {
       return (
@@ -56,13 +62,12 @@ class SourceCodeGridElement extends React.Component {
       <div className="gridElement" key={sourceCode.fileName}>
         <div className="gridElementHeader">
           <h4>{sourceCode.fileName}</h4>
-          <button
-            className="tabExitButton"
-            onClick={() => onClick(sourceCode.fileName)}
-          >
-            {' '}
-            x
-          </button>
+          <img
+            className="exitButton"
+            src={exitButton}
+            alt="exit button"
+            onClick={() => onExitButtonClick(file)}
+          />
         </div>
         <Element
           className="gridContainer"

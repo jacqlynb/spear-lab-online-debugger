@@ -64,7 +64,7 @@ class RawLogContainer extends React.Component {
 
     return this.state.logItems ? (
       <div className="rawLogContainer">
-        <h4>Select two raw log lines to view path in between:</h4>
+        <h4>Select two raw log lines to highlight path in between:</h4>
         {rawLogMarkup}
       </div>
     ) : null;

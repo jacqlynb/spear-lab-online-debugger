@@ -5,7 +5,7 @@ import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
 import GraphContainer from '../containers/GraphContainer';
-import { constructLogHierarchy } from '../helpers/helpers';
+import { constructLogHierarchy, constructLogHierarchyAllPaths } from '../helpers/helpers';
 import './App.css';
 
 const gridIcon = require('../images/view-grid.svg');
@@ -63,7 +63,15 @@ class App extends React.PureComponent {
   componentDidMount() {
     this.fetchIssues()
       .then(issues => {
-        this.setState({ issues, graphView: false });
+        if (!this.state.currentIssue) {
+        this.setState({ 
+          issues,
+          currentIssue: issues[0]
+        });
+        this.handleIssueClicked(issues[0]);
+      } else {
+        this.setState({ issues });
+      }
       })
       .catch(err => console.log(err));
   }
@@ -71,9 +79,11 @@ class App extends React.PureComponent {
   render() {
     const {
       issues,
+      currentIssue,
       exceptionData,
       logData,
       logDataHierarchical,
+      logDataHierarchicalAllPaths,
       sourceCode,
       linesToHighlight,
       currentFile,
@@ -101,10 +111,12 @@ class App extends React.PureComponent {
         <div className="exception">
           <p className="exceptionHeader">Exception: </p>
           <ExceptionContainer
+            currentIssue={currentIssue}
             loggingPointClicked={this.handleFileChanged}
             duplicatesClicked={this.toggleDuplicates}
             exceptionData={exceptionData}
             currentFile={currentFile}
+            allSelectedFiles={allSelectedFiles}
           />
         </div>
       );
@@ -114,10 +126,12 @@ class App extends React.PureComponent {
         <div className="exception">
           <p className="exceptionHeader">Log: </p>
           <ExceptionContainer
+            currentIssue={currentIssue}
             loggingPointClicked={this.handleFileChanged}
             duplicatesClicked={this.toggleDuplicates}
             exceptionData={logData}
             currentFile={currentFile}
+            allSelectedFiles={allSelectedFiles}
           />
         </div>
       );
@@ -201,6 +215,7 @@ class App extends React.PureComponent {
         <GraphContainer
           allSelectedFiles={allSelectedFiles}
           logData={logDataHierarchical}
+          logDataAllPaths={logDataHierarchicalAllPaths}
           checkBoxItems={checkBoxItems}
         />
       </div>
@@ -302,13 +317,15 @@ class App extends React.PureComponent {
   }
 
   handleTabExitClicked(fileToRemove) {
+    console.log('handleTabExitClicked called')
+    console.log('allSelectedfiles: ', this.state.allSelectedFiles);
     const files = [...this.state.allSelectedFiles];
 
     const filesUpdated = files.filter(file => {
-      if (file.fileName !== fileToRemove) {
-        return file;
-      } else {
+      if (file.fileName === fileToRemove.fileName && file.lineNumber === fileToRemove.lineNumber && file.methodName === fileToRemove.methodName) {
         return null;
+      } else {
+        return file;
       }
     });
 
@@ -333,6 +350,11 @@ class App extends React.PureComponent {
       logDataHierarchical = constructLogHierarchy(log);
     }
 
+    let logDataHierarchicalAllPaths = [];
+    if (log.length !== 0) {
+      logDataHierarchicalAllPaths = constructLogHierarchyAllPaths(log)
+    }
+
     this.setState({
       currentIssue: issueTitle,
       currentFile: '',
@@ -340,6 +362,7 @@ class App extends React.PureComponent {
       exceptionData: exception,
       logData: log,
       logDataHierarchical,
+      logDataHierarchicalAllPaths,
       sourceCode,
       linesToHighlight,
       rawLogData,
@@ -402,19 +425,14 @@ class App extends React.PureComponent {
   }
 
   handleRawLogChanged(item) {
-    console.log('handleRawLogChanged item', item)
     const currentCheckedItems = [...this.state.checkBoxItems];
-    console.log('[App.js] currentCheckedItems', currentCheckedItems);
 
     if (currentCheckedItems.includes(item)) {
-      console.log('item already included')
       currentCheckedItems.splice(currentCheckedItems.indexOf(item), 1);
     } else if (currentCheckedItems.length >= 2) {
-      console.log('checkbox array full')
       currentCheckedItems.pop();
       currentCheckedItems.push(item);
     } else {
-      console.log('adding item to array');
       currentCheckedItems.push(item);
     }
 

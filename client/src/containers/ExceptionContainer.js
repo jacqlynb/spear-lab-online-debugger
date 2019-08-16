@@ -1,8 +1,7 @@
 import React from 'react';
-import { Switch, FormControlLabel, withStyles } from '@material-ui/core';
+import { Switch, FormControlLabel } from '@material-ui/core';
 import Callpath from '../components/CallPath.js';
 import './ExceptionContainer.css';
-import { fontWeight } from '@material-ui/system';
 
 // TODO: convert this to a function component
 
@@ -12,7 +11,8 @@ class ExceptionContainer extends React.PureComponent {
       loggingPointClicked,
       exceptionData,
       currentFile,
-      duplicatesClicked
+      duplicatesClicked,
+      allSelectedFiles
     } = this.props;
 
     const callPathMarkup = exceptionData.map((callPathElement, index) => {
@@ -23,12 +23,14 @@ class ExceptionContainer extends React.PureComponent {
           currentFile={currentFile}
           loggingPointClicked={loggingPointClicked}
           duplicatesClicked={duplicatesClicked}
+          allSelectedFiles={allSelectedFiles}
         />
       );
     });
 
     return (
-      <div>
+      <div className="exceptionContainer">
+        <h4>{this.props.currentIssue}</h4>
         <div className="formControlLabel">
           <FormControlLabel
             className="formControlLabel"
