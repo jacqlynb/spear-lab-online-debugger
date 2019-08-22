@@ -10,5 +10,37 @@
 }
 
 .exceptionContainer h4 {
+  margin: 0;
   margin-left: 25px;
+  align-self: center;
+  padding: 10px 0;
 }
+
+.exceptionContainer {
+  padding-top: 28px;
+  height: 100%;
+  background: rgb(233, 233, 233);
+}
+
+.exceptionContainerHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 15px;
+  margin-top: 0px;
+}
+
+.graphIcon--selected {
+  padding-right: 20px
+}
+
+.graphIcon {
+  height: 24px;
+  width: 30px;
+  /* padding-bottom: 20px; */
+  /* justify-self: center; */
+  transform: rotate(-90deg);
+  opacity: 0.45;
+}
+

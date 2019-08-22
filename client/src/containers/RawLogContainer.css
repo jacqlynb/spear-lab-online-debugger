@@ -1,0 +1,26 @@
+.rawLogContainer {
+  margin-top: 30px;
+}
+
+.rawLogHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 15px;
+  margin: 20px 10px 0px 10px;
+  border-bottom: 1px solid rgb(192, 192, 192);
+}
+
+.rawLogHeader h4 {
+  font-size: 0.85em;
+}
+
+.graphIcon--static {
+  width: 24px;
+  /* padding-bottom: 20px; */
+  /* justify-self: center; */
+  transform: rotate(-90deg);
+  opacity: 1;
+
+}

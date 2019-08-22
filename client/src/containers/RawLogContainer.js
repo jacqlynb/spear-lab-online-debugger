@@ -1,6 +1,10 @@
 import React from 'react';
 import RawLogLine from '../components/RawLogLine';
+import ReactTooltip from 'react-tooltip';
+import './RawLogContainer.css';
 import '../components/RawLogLine.css';
+
+const graphIcon = require('../images/graph-icon.svg');
 
 class RawLogContainer extends React.Component {
   constructor(props) {
@@ -62,9 +66,24 @@ class RawLogContainer extends React.Component {
       );
     });
 
+    const graphViewIconMarkup = (
+      <div>
+        <img
+          data-tip="View rog log data and callgraph"
+          className="graphIcon--static"
+          src={graphIcon}
+          alt="View raw log data and callgraph"
+        />
+        <ReactTooltip />
+      </div>
+    );
+
     return this.state.logItems ? (
       <div className="rawLogContainer">
-        <h4>Select two raw log lines to highlight path in between:</h4>
+        <div className="rawLogHeader">
+          <h4>Select two raw log lines to highlight path in between:</h4>
+          {graphViewIconMarkup}
+        </div>
         {rawLogMarkup}
       </div>
     ) : null;
@@ -80,94 +99,5 @@ class RawLogContainer extends React.Component {
     }
   }
 }
-
-//   handleRawLogClicked(logIndex) {
-//     console.log('handleRawLogClicked called');
-//     const currentCheckBoxesClicked = [...this.state.checkBoxesClicked];
-
-//     if (currentCheckBoxesClicked.includes(logIndex)) {
-//       console.log('currentCheckBoxesClicked includes', logIndex);
-//       currentCheckBoxesClicked.splice(
-//         currentCheckBoxesClicked.indexOf(logIndex),
-//         1
-//       );
-//     } else if (currentCheckBoxesClicked.length >= 2) {
-//       currentCheckBoxesClicked.pop();
-//       console.log('current checkboxes clicked', currentCheckBoxesClicked);
-//       currentCheckBoxesClicked.push(logIndex);
-//     } else {
-//       currentCheckBoxesClicked.push(logIndex);
-//     }
-//     if (currentCheckBoxesClicked.length >= 2) {
-//       this.setState({
-//         checkBoxesFull: true
-//       });
-//     } else {
-//       this.setState({
-//         checkBoxesFull: false
-//       });
-//     }
-//     this.setState({
-//       checkBoxesClicked: currentCheckBoxesClicked
-//     });
-//   }
-
-//   componentDidMount() {
-//     console.log('[RawLogContainer.js] componentDidMount');
-//     this.fetchLogData()
-//       .then(data => {
-//         this.setState({
-//           logData: data.log
-//         });
-//       })
-//       .catch(err => console.log(err));
-//   }
-
-//   render() {
-//     const { logData } = this.state;
-
-//     const rawLogs = logData.map(log => {
-//       return log.filter(logLine => {
-//         return logLine.log;
-//       });
-//     });
-
-//     const rawLogArray = [];
-//     rawLogs.map(log => {
-//       log.map(line => {
-//         rawLogArray.push(line.log);
-//       });
-//     });
-
-//     const rawLogMarkup = rawLogArray.map((log, i) => {
-//       return (
-//         <RawLogLine
-//           clicked={() => this.handleRawLogClicked(i)}
-//           key={i}
-//           logLine={log}
-//           disabled={!this.state.checkBoxesClicked.includes(i)}
-//           checked={this.state.checkBoxesClicked.includes(i)}
-//         />
-//       );
-//     });
-
-//     return (
-//       <div className="rawLogContainer">
-//         <h4>Select two raw log lines to view path in between:</h4>
-//         {rawLogMarkup}
-//       </div>
-//     );
-//   }
-
-//   async fetchLogData() {
-//     try {
-//       const data = await fetch('/2486');
-//       const body = await data.text();
-//       return JSON.parse(body);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-// }
 
 export default RawLogContainer;

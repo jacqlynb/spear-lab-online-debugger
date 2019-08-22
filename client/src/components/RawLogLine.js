@@ -21,11 +21,6 @@ class RawLogLine extends React.Component {
               />
               <span className="React__checkbox--span" />
               <div className="logText">{this.props.name}</div>
-              <div className="rawLogNumberIcon">
-              <RawLogNumberIcon
-                rawLogNumber={rawLogNumber} 
-              />
-              </div>
             </div>
           </label>
         </div>

@@ -3,17 +3,18 @@
 }
 
 .rawLogLine {
-  background: rgb(241, 241, 241);
+  background: white;
   border-bottom: 1px solid rgb(192, 192, 192);
   border-left: 1px solid rgb(192, 192, 192);
   border-right: 1px solid rgb(192, 192, 192);
-  font-size: 0.7em;
+  font-size: 0.65em;
   padding: 0;
-  margin: 0;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .rawLogLine--checked {
-  background: lightgray;
+  background: rgb(192, 192, 192);
   left: 0;
   top: 0;
   border-bottom: 1px solid rgb(192, 192, 192);
@@ -21,14 +22,16 @@
   border-right: 1px solid rgb(192, 192, 192);
   font-size: 0.7em;
   padding: 0;
-  margin: 0;
+  margin-left: 10px;
+  margin-right: 10px;
 }
-
+/* 
 .rawLogContainer h4 {
   padding-bottom: 15px;
   border-bottom: 1px solid rgb(192, 192, 192);
-  margin: 25px 0 0 0;
-}
+  margin: 65px 10px 0 10px;
+  font-size: 0.9em;
+} */
 
 .logLineWrapper {
   display: flex;

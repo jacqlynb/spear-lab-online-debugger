@@ -102,7 +102,7 @@ class GraphContainer extends React.Component {
             d.target.data.callPathIDs &&
             d.target.data.callPathIDs.includes(callPath)
           ) {
-            stroke = 'blue';
+            stroke = '#13cefd';
           }
         });
         return stroke;
