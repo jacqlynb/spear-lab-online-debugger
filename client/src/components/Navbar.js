@@ -1,5 +1,7 @@
 import React from 'react';
 import './Navbar.css';
+import logo from '../images/spear-logo.png';
+const spearLogo = require('../images/spear-logo.png');
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -76,7 +78,10 @@ class Navbar extends React.Component {
     return (
       <div className="navbar">
         <ul className="navigation" role="navigation">
-          <li className="title">working title</li>
+          <li className="titleContainer">
+            <img src={logo}/>
+            <h3>Online debugger</h3>
+          </li>
           <li className="searchbar">
             <div className="inputDropdown" ref={this.setWrapperRef}>
               <input
