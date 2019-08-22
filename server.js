@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 5000;
 const ObjectId = require('mongodb').ObjectID;
@@ -50,25 +51,22 @@ app.get("/2486-with-levels", (req, res) => {
 
 app.listen(port, () => console.log(`Listening on ${port}`));
 
-function constructLogHierarchy1(data) {
-  console.log('called constructLogHierarchy')
-  let log = {}
-  log.id = 'log';
-  log.children = []
-  data.log.map((element, i) => {
-    log.children[i] = {}
-    log.children[i].id = "callpath"
-    log.children[i].children = []
-    element.map(line => {
-      log.children[i].children.push(line);
-    });
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'client/build')));
+// Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
-  console.log('log', log)
-
-  return log;
 }
 
+/* Dev scripts package.json: 
+ "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
 
+      "main": "server.js",
+*/
 
 // ***** Promise.all pattern *****
 // Promise.all([findException, findSourceCode]).then(value => {
