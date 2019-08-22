@@ -94,7 +94,8 @@ class App extends React.PureComponent {
       graphView,
       searchSuggestions,
       rawLogData,
-      checkBoxItems
+      checkBoxItems,
+      multipleFromSameFile
     } = this.state;
 
     const navBarMarkup = (
@@ -109,7 +110,6 @@ class App extends React.PureComponent {
     const exceptionMarkup =
       exceptionData.length === 0 ? null : (
         <div className="exception">
-          <p className="exceptionHeader">Exception: </p>
           <ExceptionContainer
             currentIssue={currentIssue}
             loggingPointClicked={this.handleFileChanged}
@@ -117,6 +117,9 @@ class App extends React.PureComponent {
             exceptionData={exceptionData}
             currentFile={currentFile}
             allSelectedFiles={allSelectedFiles}
+            graphView={graphView}
+            rawLogData={rawLogData}
+            multiple={multipleFromSameFile}
           />
         </div>
       );
@@ -124,7 +127,6 @@ class App extends React.PureComponent {
     const logMarkup =
       logData.length === 0 ? null : (
         <div className="exception">
-          <p className="exceptionHeader">Log: </p>
           <ExceptionContainer
             currentIssue={currentIssue}
             loggingPointClicked={this.handleFileChanged}
@@ -132,6 +134,10 @@ class App extends React.PureComponent {
             exceptionData={logData}
             currentFile={currentFile}
             allSelectedFiles={allSelectedFiles}
+            graphView={graphView}
+            rawLogData={rawLogData}
+            graphViewClick={this.toggleGraphView}
+            multiple={multipleFromSameFile}
           />
         </div>
       );
@@ -162,24 +168,10 @@ class App extends React.PureComponent {
       </div>
     );
 
-    const graphViewIconMarkup = (
-      <div>
-        <img
-          data-tip="Graph view"
-          className={graphView ? 'graphIcon--selected' : 'graphIcon'}
-          onClick={graphView ? null : this.toggleGraphView}
-          src={graphIcon}
-          alt="Tab view"
-        />
-        <ReactTooltip />
-      </div>
-    );
-
     const sourceCodeHeaderWrapper = (
       <div className="sourceCodeHeaderWrapper">
         {gridViewIconMarkup}
         {tabViewIconMarkup}
-        {rawLogData ? graphViewIconMarkup : null}
       </div>
     );
 
@@ -234,7 +226,7 @@ class App extends React.PureComponent {
         {navBarMarkup}
         <div className="container">
           {graphView ? rawLogMarkup : callPathMarkup}
-          <div className="sourceCode">
+          <div className="sourceCodeContainer">
             {graphView ? graphMarkup : sourceCodeMarkup}
           </div>
         </div>

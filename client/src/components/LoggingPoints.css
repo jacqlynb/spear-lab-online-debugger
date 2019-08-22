@@ -15,7 +15,8 @@
 
 .LoggingPoint--active {
   font-weight: bold;
-  color: red;
+  color: #5C6AC4;
+  background: rgb(233, 233, 233);
 }
 
 .fileName {

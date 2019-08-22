@@ -1,7 +1,17 @@
+.app {
+  height: 100%;
+}
+
 .container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   height: 100%;
   display: flex;
   flex-direction: row;
+  height: calc(100vh);
+}
+
+.exception {
+  background: rgb(233, 233, 233);
 }
 
 .exceptionHeader {
@@ -17,12 +27,6 @@
   padding-bottom: 15px;
 }
 
-.sourceCodeHeader {
-  font-size: 17px;
-  font-weight: bold;
-  padding-left: 15px;
-}
-
 .issues {
   width: 30px;
   padding-top: 40px;
@@ -31,7 +35,6 @@
 
 .callPath {
   height: 100%;
-  padding-top: 40px;
   overflow: auto;
   flex: 7;
   background: white;
@@ -39,28 +42,21 @@
   /* box-shadow: 2px 0 3px rgb(161, 161, 161); */
 }
 
-.sourceCode {
+.sourceCodeContainer {
   flex: 20;
-  padding-top: 20px;
+  margin-top: 20px;
   box-sizing: border-box;
   height: 100%;
   overflow: auto;
 }
 
 .rawLogContainer {
-  flex: 15;
-  margin-left: 20px;
-  margin-top: 65px;
-  margin-right: 10px;
+  flex: 8;
+  background: rgb(233, 233, 233);
 }
 
 .graphContainer {
-  flex: 2;
-  margin-top: 40px;
-  margin-left: 20px;
-  margin-right: 20px;
-  height: 100%;
-  z-index: 2;
+  flex: 20;
 }
 
 .code {
@@ -72,9 +68,10 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
-  margin: 20px 30px 10px 0;
+  margin-top: 35px;
+  margin-left: 5px
 }
 
 .gridIcon {
@@ -117,15 +114,6 @@
 .tabIcon:hover {
   cursor: pointer;
   opacity: 1;
-}
-
-.graphIcon {
-  height: 25px;
-  width: auto;
-  align-self: center;
-  margin-left: 8px;
-  opacity: 0.45;
-  transform: rotate(-90deg);
 }
 
 .graphIcon--selected {

@@ -98,17 +98,20 @@ class SourceCodeContainer extends React.PureComponent {
           let currentFileName = elem;
           let tabStyle = null;
           if (!currentFileName === file.fileName) {
-            tabStyle = { background: 'black' }
+            tabStyle = { background: 'black' };
           }
           return (
-            <Tab style={tabStyle} key={currentFileName}>
+            <Tab
+              style={tabStyle}
+              key={currentFileName.fileName + currentFileName.lineNumber}
+            >
               {currentFileName.fileName}
-              <img
-                src={tabExitButton}
-                alt='exit button'
-                className="tabExitButton"
+              <button
                 onClick={() => onExitButtonClick(currentFileName)}
-              />
+                className="tabExitButton"
+              >
+                <img src={tabExitButton} alt="exit button" className="tabExitIcon" />
+              </button>
             </Tab>
           );
         })

@@ -1,6 +1,3 @@
-.sourceCodeContainer {
-}
-
 .element {
   /* box-shadow: inset 0px 2px 5px rgb(226, 226, 226); */
   font-family: 'Courier New', Courier, monospace;
@@ -17,17 +14,17 @@
   border-left: 1px solid #aaa;
 }
 
-.tabHeader {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 14px;
-  margin: 0px 15px;
-  padding-bottom: 0px;
-  /* border-bottom: 1px solid white; */
+.gridElementHeader button {
+  background: none;
+  border: none;
 }
 
-.active {
-	color:red !important;
+.tabHeader {
+  font-weight: bold;
+  font-size: 13px;
+  margin: 0px 15px;
+  
+  /* border-bottom: 1px solid white; */
 }
 
 .react-tabs__tab {
@@ -47,49 +44,19 @@
   padding-bottom: 0px;
 }
 
-.tabExitButton {
+.tabExitIcon {
   margin: 0px 0px 0px 20px;
   height: 18px;
   width: 18px;
-  align-self: center;
 }
 
-/* refactor using classNames!!! */
-.sourceCodeGrid {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-auto-rows: 280px;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 15px;
+.tabExitButton {
+  border: none;
+  background: none;
+  padding: none;
+  margin-right: -9px;
 }
 
-.sourceCodeGrid-1 {
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-rows: auto;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 15px;
-}
-
-.sourceCodeGrid-2 {
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-rows: 280px;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 15px;
-}
-
-.gridContainer {
-  overflow: auto;
-  position: relative;
-  max-height: 250px;
-  margin-right: 15px;
-  background: rgb(245, 245, 245); 
-  margin-bottom: 15px;
+.tabExitButton:hover {
+  cursor: pointer;
 }

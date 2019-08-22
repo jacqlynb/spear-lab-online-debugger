@@ -1,22 +1,29 @@
 .CodeLine {
   color: lightslategray;
-  line-height: 8.5px;
+  /* line-height: 12px; */
   white-space: pre;
+}
+
+.CodeLine p {
+  margin: 4px 0;
+  /* padding: 1px 0; */
 }
 
 .lineFormatting {
-  padding-right: 10px;
+  /* padding-right: 10px; */
+  margin: 5px 0px;
   white-space: pre;
+  margin: 0;
+  padding: 0 10px 0 0;
 }
 
-.highlight {
+/* .highlight {
   padding-top: 2px;
   padding-bottom: 2px;
-  background: rgb(255, 255, 219);
-}
+} */
 
 .targetLine {
-  padding-top: 2px;
-  padding-bottom: 2px;
+  /* padding-top: 2px;
+  padding-bottom: 2px; */
   background: yellow;
 }
