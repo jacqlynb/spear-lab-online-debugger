@@ -50,24 +50,6 @@ app.get("/2486-with-levels", (req, res) => {
 
 app.listen(port, () => console.log(`Listening on ${port}`));
 
-function constructLogHierarchy1(data) {
-  console.log('called constructLogHierarchy')
-  let log = {}
-  log.id = 'log';
-  log.children = []
-  data.log.map((element, i) => {
-    log.children[i] = {}
-    log.children[i].id = "callpath"
-    log.children[i].children = []
-    element.map(line => {
-      log.children[i].children.push(line);
-    });
-  });
-  console.log('log', log)
-
-  return log;
-}
-
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'client/build')));
@@ -81,6 +63,8 @@ if (process.env.NODE_ENV === 'production') {
  "client": "cd client && yarn start",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+
+      "main": "server.js",
 */
 
 // ***** Promise.all pattern *****
