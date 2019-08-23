@@ -2,7 +2,6 @@
   "name": "visualization-platform",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
@@ -12,23 +11,19 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "classnames": "^2.2.6",
-    "d3": "^5.11.0",
-    "d3plus-text": "^0.9.50",
-    "dagre": "^0.8.4",
-    "dagre-d3": "^0.6.3",
+    "d3": "^5.9.7",
+    "d3plus-text": "^0.9.48",
     "express": "^4.16.4",
-    "mongoose": "^5.6.10",
-    "n-readlines": "^1.0.0",
+    "mongoose": "^5.6.7",
     "nodemon": "^1.19.1",
     "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-highlight-words": "^0.16.0",
-    "react-scroll": "^1.7.13",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scroll": "^1.7.12",
     "react-tabs": "^3.0.0",
     "react-tooltip": "^3.10.0"
   },
   "devDependencies": {
-    "concurrently": "^4.1.2"
+    "concurrently": "^4.1.1"
   }
 }
