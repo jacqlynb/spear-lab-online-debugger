@@ -77,6 +77,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+/* Dev scripts package.json: 
+ "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+*/
 
 // ***** Promise.all pattern *****
 // Promise.all([findException, findSourceCode]).then(value => {
