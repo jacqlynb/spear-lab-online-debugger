@@ -60,13 +60,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-/* Dev scripts package.json: 
- "client": "cd client && yarn start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-
-      "main": "server.js",
-*/
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'client/build')));
+// Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
 
 // ***** Promise.all pattern *****
 // Promise.all([findException, findSourceCode]).then(value => {
