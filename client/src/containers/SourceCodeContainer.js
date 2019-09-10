@@ -20,10 +20,8 @@ class SourceCodeContainer extends React.PureComponent {
 
   componentDidMount() {
     Events.scrollEvent.register('begin', () => {
-      // console.log("begin", arguments);
     });
     Events.scrollEvent.register('end', () => {
-      // console.log("end", arguments);
     });
   }
 

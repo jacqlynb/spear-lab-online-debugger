@@ -62,8 +62,6 @@ class ExceptionContainer extends React.PureComponent {
       </div>
     );
 
-    console.log("ExceptionContainer rawLogData", rawLogData);
-
     return (
       <div className="exceptionContainer">
         <div className="exceptionContainerHeader">

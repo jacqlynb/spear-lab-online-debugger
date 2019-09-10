@@ -5,6 +5,7 @@ import './RawLogContainer.css';
 import '../components/RawLogLine.css';
 
 const graphIcon = require('../images/graph-icon.svg');
+const leftArrow = require('../images/left-arrow.svg');
 
 class RawLogContainer extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class RawLogContainer extends React.Component {
   }
 
   render() {
-    const { checkBoxItems } = this.props;
+    const { checkBoxItems, click } = this.props;
     console.log('[RawLogContainer] checkBoxItems', checkBoxItems);
 
     const rawLogMarkup = this.state.logItems.map((logItem, i) => {
@@ -69,7 +70,7 @@ class RawLogContainer extends React.Component {
     const graphViewIconMarkup = (
       <div>
         <img
-          data-tip="View rog log data and callgraph"
+          data-tip="View raw log data and callgraph"
           className="graphIcon--static"
           src={graphIcon}
           alt="View raw log data and callgraph"
@@ -81,6 +82,9 @@ class RawLogContainer extends React.Component {
     return this.state.logItems ? (
       <div className="rawLogContainer">
         <div className="rawLogHeader">
+          <button className="leftArrowButton" onClick={() => click()}>
+            <img src={leftArrow} alt="Return to main menu" />
+          </button>
           <h4>Select two raw log lines to highlight path in between:</h4>
           {graphViewIconMarkup}
         </div>

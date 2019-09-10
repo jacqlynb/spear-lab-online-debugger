@@ -66,9 +66,9 @@ class App extends React.PureComponent {
         if (!this.state.currentIssue) {
         this.setState({ 
           issues,
-          currentIssue: issues[0]
+          currentIssue: 'HADOOP-2486'
         });
-        this.handleIssueClicked(issues[0]);
+        this.handleIssueClicked('HADOOP-2486');
       } else {
         this.setState({ issues });
       }
@@ -175,8 +175,22 @@ class App extends React.PureComponent {
       </div>
     );
 
+    console.log('[App.js] graphView', graphView);
+
+    const landingPageMarkup = (
+      <div className="landingPage">
+        <h2>Getting started:</h2>
+        <ul className="landingPageList">
+        <li><p>On the left panel, click on a logging point to view the corresponding line in the source code file</p></li>
+        <li><p>Toggle the switch to open multiple windows for the same source code file</p></li>
+        <li><p>If there is raw log data, the {<img src={graphIcon} className="graphIcon--landingPage"/>}icon will appear. Click it to view a visualization of multiple raw log data points</p></li>
+        <li><p>Use the search box to view other HADOOP issues</p></li>
+        </ul>
+      </div>
+    )
+
     const sourceCodeMarkup =
-      sourceCode.length === 0 ? null : (
+      (sourceCode.length === 0 || allSelectedFiles.length === 0) ? landingPageMarkup : (
         <div className="sourceCode">
           {sourceCodeHeaderWrapper}
           <SourceCodeContainer
@@ -198,6 +212,7 @@ class App extends React.PureComponent {
         change={this.handleRawLogChanged}
         checkBoxItems={checkBoxItems}
         logData={logData}
+        click={this.toggleGraphView}
       />
     );
 
@@ -220,11 +235,10 @@ class App extends React.PureComponent {
       </div>
     );
 
-    // change to callPathContainer, sourceCodeContainer, etc?
     return (
       <div className="app">
         {navBarMarkup}
-        <div className="container">
+        <div className="callPathContainer">
           {graphView ? rawLogMarkup : callPathMarkup}
           <div className="sourceCodeContainer">
             {graphView ? graphMarkup : sourceCodeMarkup}
@@ -243,10 +257,14 @@ class App extends React.PureComponent {
       duplicateFile = files.filter(file => {
         if (file.fileName === fileName) {
           return file;
-        } else {
-          return null;
         }
       });
+    } else {
+      duplicateFile = files.filter(file => {
+        if (file.fileName === fileName && file.lineNumber === lineNumber && file.methodName === methodName) {
+          return file;
+        }
+      })
     }
 
     let tabIndex;
@@ -400,10 +418,11 @@ class App extends React.PureComponent {
   }
 
   toggleGraphView() {
+    let graph = !this.state.graphView;
     this.setState({
       gridView: false,
       tabView: false,
-      graphView: true
+      graphView: graph
     });
   }
 

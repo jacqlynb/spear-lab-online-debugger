@@ -22,5 +22,9 @@
   /* justify-self: center; */
   transform: rotate(-90deg);
   opacity: 1;
+}
 
+.leftArrowButton {
+  border: none;
+  background: inherit;
 }
