@@ -72,8 +72,6 @@ class ExceptionContainer extends React.PureComponent {
           <StyledLabel
             className="formControlLabel"
             labelPlacement="start"
-            
-            // style={formControlLabelStyle}
             control={
               <Switch
                 size="small"

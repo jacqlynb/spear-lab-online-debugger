@@ -20,6 +20,7 @@
   padding-top: 28px;
   height: 100%;
   background: rgb(233, 233, 233);
+  min-width: 345px;
 }
 
 .exceptionContainerHeader {
