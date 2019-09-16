@@ -12,8 +12,6 @@
   align-items: center;
   padding: 5px;
   margin: 0;
-  /* border-bottom: 1px solid rgb(144, 144, 153); */
-  /* box-shadow: 0 2px 3px rgb(91, 91, 97);  */
   z-index: 3;
   justify-content: space-between;
 }
@@ -43,13 +41,117 @@
   width: auto;
 }
 
-label {
+.react-autosuggest__input {
+  width: 110px;
+  height: 12px;
+  padding: 10px 20px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.react-autosuggest__input--focused {
+  outline: none;
+}
+
+.react-autosuggest__input--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.react-autosuggest__suggestions-container {
+  display: none;
+}
+
+.react-autosuggest__suggestions-container--open {
+  color: black;
+  display: block;
+  position: absolute;
+  /* top: 0px; */
+  width: 150px;
+  border-right: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+  text-align: left;
+}
+
+.react-autosuggest__suggestions-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.react-autosuggest__suggestion--highlighted {
+  background-color: #ddd;
+}
+
+.react-autosuggest__container {
+  /* width: 175px;
+  margin: 15px 20px;
+  font-size: 16px;
+  color: black;
+  text-align: left;
+  background-color: '#EBECF0';
+  border-radius: '2em';
+  color: '#172B4D';
+  display: 'inline-block';
+  font-size: 12;
+  font-weight: 'normal';
+  line-height: '1';
+  min-width: 1;
+  padding: '0.16666666666667em 0.5em';
+  text-align: 'center'; */
+}
+
+
+.react-autosuggest__suggestion--highlighted {
+  background-color: #ddd;
+}
+
+
+.searchBar {
+  display: flex;
+  flex-direction: row;
+}
+
+.searchIssuesButton {
+  border: 2px solid white;
+  color: white;
+  font-size: 0.7em;
+  background: #5C6AC4;
+  margin: 5px 20px 5px 0px;
+  align-self: center;
+}
+/*label {
   margin-left: 200px;
   padding-right: 20px;
   font-size: 16px;
   justify-self: center;
-}
+} */
 
+
+/* 
+.searchIssuesButton {
+  border: none;
+  background: #5C6AC4;
+  padding: 0;
+} */
+/* 
 .inputDropdown {
   color: black;
   font-size: 15px;
@@ -57,7 +159,6 @@ label {
   border: 1px solid gray;
   margin-left: 10px;
   margin-right: 10px;
-  /* box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 2px 4px 1px rgba(0,0,0,.18); */
   overflow-y: auto;
   z-index: 4;
   position: fixed;
@@ -70,16 +171,16 @@ label {
   box-sizing: border-box;
   outline: none;
   margin: 0;
-}
-
+} */
+/* 
 .inputDropdown ul {
   margin: 0;
   padding: 0;
   border-top: 1px solid gray;
   text-align: left;
   list-style-type: none;
-}
-
+} */
+/* 
 .inputDropdown ul::before {
   content: "";
 }
@@ -90,4 +191,4 @@ label {
 
 .inputDropdown li:hover {
   background: #B3BCF5;
-}
+} */
