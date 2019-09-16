@@ -132,44 +132,10 @@ class Navbar extends React.Component {
     console.log('[Navbar.js], this.state.searchValue', searchValue);
 
     const inputProps = {
-      placeholder: 'Type a programming language',
+      placeholder: 'HADOOP-#',
       value: searchValue,
       onChange: this.onChange
     };
-
-    /*return (
-      <div className="navbar">
-        <ul className="navigation" role="navigation">
-          <li className="titleContainer">
-            <img src={spearLogo}/>
-            <h3>Online debugger</h3>
-          </li>
-          <li className="searchBar">
-            <div className="inputDropdown" ref={this.setWrapperRef}>
-              <input
-                type="text"
-                id="targetIssue"
-                onChange={this.onSearchTextChange}
-                value={searchBoxValue}
-                autoComplete="off"
-              />
-              <ul>{suggestionListMarkup}</ul>
-            </div>
-            <button className="searchIssuesButton">Search Issues</button>
-          </li>
-        </ul>
-      </div>
-    ); */
-
-    // const selectStyles = {
-    //   input: base => ({
-    //     ...base,
-    //     color: theme.palette.text.primary,
-    //     '& input': {
-    //       font: 'inherit',
-    //     },
-    //   }),
-    // };
 
     return (
       <div className="navbar">
@@ -180,17 +146,16 @@ class Navbar extends React.Component {
           </li>
           <li>
             <div className="searchBar">
-                {/* <Select options={options} onChange={(e) => console.log(e)} className="issuesDropDownMenu" /> */}
-                <Autosuggest
-                  className="issuesDropDownMenu"
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                  getSuggestionValue={this.getSuggestionValue}
-                  renderSuggestion={this.renderSuggestion}
-                  inputProps={inputProps}
-                />
-                <button className="searchIssuesButton" onClick={() => onSearchClick(this.state.searchValue)}>Search Issues</button>
+              <Autosuggest
+                className="issuesDropDownMenu"
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                getSuggestionValue={this.getSuggestionValue}
+                renderSuggestion={this.renderSuggestion}
+                inputProps={inputProps}
+              />
+              <button className="searchIssuesButton" onClick={() => onSearchClick(this.state.searchValue)}>Search Issues</button>
             </div>
           </li>
         </ul>

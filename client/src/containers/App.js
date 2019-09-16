@@ -5,7 +5,10 @@ import ExceptionContainer from './ExceptionContainer';
 import RawLogContainer from '../containers/RawLogContainer';
 import SourceCodeContainer from '../containers/SourceCodeContainer';
 import GraphContainer from '../containers/GraphContainer';
-import { constructLogHierarchy, constructLogHierarchyAllPaths } from '../helpers/helpers';
+import {
+  constructLogHierarchy,
+  constructLogHierarchyAllPaths
+} from '../helpers/helpers';
 import './App.css';
 
 const gridIcon = require('../images/view-grid.svg');
@@ -57,21 +60,25 @@ class App extends React.PureComponent {
     tabView: false,
     graphView: false,
     multipleFromSameFile: false,
-    checkBoxItems: []
+    checkBoxItems: [],
+    fetchError: false
   };
 
   componentDidMount() {
     this.fetchIssues()
       .then(issues => {
-        if (!this.state.currentIssue) {
-        this.setState({ 
-          issues,
-          currentIssue: 'HADOOP-2486'
+        let namedIssues = issues.filter(issue => {
+          return issue !== null;
         });
-        this.handleIssueClicked('HADOOP-2486');
-      } else {
-        this.setState({ issues });
-      }
+        if (!this.state.currentIssue) {
+          this.setState({
+            issues: namedIssues,
+            currentIssue: 'HADOOP-2486'
+          });
+          this.handleIssueClicked('HADOOP-2486');
+        } else {
+          this.setState({ issues: namedIssues });
+        }
       })
       .catch(err => console.log(err));
   }
@@ -95,7 +102,8 @@ class App extends React.PureComponent {
       searchSuggestions,
       rawLogData,
       checkBoxItems,
-      multipleFromSameFile
+      multipleFromSameFile,
+      fetchError
     } = this.state;
 
     const navBarMarkup = (
@@ -104,6 +112,7 @@ class App extends React.PureComponent {
         suggestions={searchSuggestions}
         onClickOutsideSearchBox={this.handleClickOutsideSearchBox}
         onIssueClick={this.handleIssueClicked}
+        onSearchClick={this.handleIssueClicked}
       />
     );
 
@@ -175,22 +184,46 @@ class App extends React.PureComponent {
       </div>
     );
 
-    console.log('[App.js] graphView', graphView);
-
-    const landingPageMarkup = (
+    const landingPageMarkup = fetchError ? (
+      <div className="landingPage">
+        <h2>Error</h2>
+        <p>Issue could not be found. Try searching another HADOOP issue.</p>
+      </div>
+    ) : (
       <div className="landingPage">
         <h2>Getting started:</h2>
         <ul className="landingPageList">
-        <li><p>On the left panel, click on a logging point to view the corresponding line in the source code file</p></li>
-        <li><p>Toggle the switch to open multiple windows for the same source code file</p></li>
-        <li><p>If there is raw log data, the {<img src={graphIcon} className="graphIcon--landingPage"/>}icon will appear. Click it to view a visualization of multiple raw log data points</p></li>
-        <li><p>Use the search box to view other HADOOP issues</p></li>
+          <li>
+            <p>
+              On the left panel, click on a logging point to view the
+              corresponding line in the source code file
+            </p>
+          </li>
+          <li>
+            <p>
+              Toggle the switch to open multiple windows for the same source
+              code file
+            </p>
+          </li>
+          <li>
+            <p>
+              If there is raw log data, the{' '}
+              {<img src={graphIcon} className="graphIcon--landingPage" />}icon
+              will appear. Click it to view a visualization of multiple raw log
+              data points
+            </p>
+          </li>
+          <li>
+            <p>Use the search box to view other HADOOP issues</p>
+          </li>
         </ul>
       </div>
-    )
+    );
 
     const sourceCodeMarkup =
-      (sourceCode.length === 0 || allSelectedFiles.length === 0) ? landingPageMarkup : (
+      sourceCode.length === 0 || allSelectedFiles.length === 0 ? (
+        landingPageMarkup
+      ) : (
         <div className="sourceCode">
           {sourceCodeHeaderWrapper}
           <SourceCodeContainer
@@ -228,7 +261,9 @@ class App extends React.PureComponent {
       </div>
     );
 
-    const callPathMarkup = (
+    const callPathMarkup = fetchError ? (
+      <div className="exceptionContainer"></div>
+    ) : (
       <div className={graphView ? 'rawLogContainer' : 'exceptionContainer'}>
         {exceptionMarkup}
         {logMarkup}
@@ -261,10 +296,14 @@ class App extends React.PureComponent {
       });
     } else {
       duplicateFile = files.filter(file => {
-        if (file.fileName === fileName && file.lineNumber === lineNumber && file.methodName === methodName) {
+        if (
+          file.fileName === fileName &&
+          file.lineNumber === lineNumber &&
+          file.methodName === methodName
+        ) {
           return file;
         }
-      })
+      });
     }
 
     let tabIndex;
@@ -327,12 +366,14 @@ class App extends React.PureComponent {
   }
 
   handleTabExitClicked(fileToRemove) {
-    console.log('handleTabExitClicked called')
-    console.log('allSelectedfiles: ', this.state.allSelectedFiles);
     const files = [...this.state.allSelectedFiles];
 
     const filesUpdated = files.filter(file => {
-      if (file.fileName === fileToRemove.fileName && file.lineNumber === fileToRemove.lineNumber && file.methodName === fileToRemove.methodName) {
+      if (
+        file.fileName === fileToRemove.fileName &&
+        file.lineNumber === fileToRemove.lineNumber &&
+        file.methodName === fileToRemove.methodName
+      ) {
         return null;
       } else {
         return file;
@@ -351,35 +392,45 @@ class App extends React.PureComponent {
   }
 
   async handleIssueClicked(issueTitle) {
-    const { exception, log, sourceCode } = await this.fetchDocument(issueTitle);
-    const linesToHighlight = this.getLinesToHighlight(exception, log);
-    const rawLogData = issueTitle === 'HADOOP-2486';
+    try {
+      const data = await this.fetchDocument(issueTitle);
+      
 
-    let logDataHierarchical = [];
-    if (log.length !== 0) {
-      logDataHierarchical = constructLogHierarchy(log);
+      const { exception, log, sourceCode } = data;
+      const linesToHighlight = this.getLinesToHighlight(exception, log);
+      const rawLogData = issueTitle === 'HADOOP-2486';
+
+      let logDataHierarchical = [];
+      if (log.length !== 0) {
+        logDataHierarchical = constructLogHierarchy(log);
+      }
+
+      let logDataHierarchicalAllPaths = [];
+      if (log.length !== 0) {
+        logDataHierarchicalAllPaths = constructLogHierarchyAllPaths(log);
+      }
+
+      console.log('handleIssueClicked')
+      this.setState({
+        currentIssue: issueTitle,
+        currentFile: '',
+        allSelectedFiles: [],
+        exceptionData: exception,
+        logData: log,
+        logDataHierarchical,
+        logDataHierarchicalAllPaths,
+        sourceCode,
+        linesToHighlight,
+        rawLogData,
+        gridView: false,
+        tabView: false,
+        graphView: false, 
+        fetchError: false
+      });
+    } catch (error) {
+      console.log('error', error);
+      this.setState({ fetchError: true });
     }
-
-    let logDataHierarchicalAllPaths = [];
-    if (log.length !== 0) {
-      logDataHierarchicalAllPaths = constructLogHierarchyAllPaths(log)
-    }
-
-    this.setState({
-      currentIssue: issueTitle,
-      currentFile: '',
-      allSelectedFiles: [],
-      exceptionData: exception,
-      logData: log,
-      logDataHierarchical,
-      logDataHierarchicalAllPaths,
-      sourceCode,
-      linesToHighlight,
-      rawLogData,
-      gridView: false,
-      tabView: false,
-      graphView: false
-    });
   }
 
   async fetchIssues() {
@@ -392,6 +443,7 @@ class App extends React.PureComponent {
   }
 
   async fetchDocument(issueTitle) {
+    console.log('[App.js] fetchDocument issueTitle', issueTitle);
     try {
       const data = await fetch('/issues/' + issueTitle);
       const body = await data.text();

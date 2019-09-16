@@ -30,7 +30,9 @@ app.get("/issues/:title", (req, res) => {
     .then(data => {
         res.status(200).send(data);
     })
-    .catch(error => res.status(404).send(error));
+    .catch(error => {
+      res.status(404).send(error);
+    });
 });
 
 app.get("/2486", (req, res) => {
