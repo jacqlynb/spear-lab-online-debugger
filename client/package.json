@@ -10,7 +10,7 @@
     "dagre-d3": "^0.6.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "react-scroll": "^1.7.14",
     "react-tabs": "^3.0.0"
   },
